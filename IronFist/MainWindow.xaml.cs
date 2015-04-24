@@ -25,7 +25,7 @@ namespace IronFist
         public MainWindow()
         {
             InitializeComponent();
-            "(include \"Scheme/robot.rkt\")".Eval();
+            "(include \"Scheme/hello-scheme.scm\")".Eval();
             CreateFileWatcher();
         }
 
