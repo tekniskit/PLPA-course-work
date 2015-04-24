@@ -14,9 +14,17 @@
                     (set! y )
                     (validPosition? x y)
                     (move (- 1 distance)))
-        )
+        ))
     (list
-     (cons 'move_forward (lambda (turns) (turn turns) direction))
+     (cons 'turn_left (lambda (turns) turns))
+     (cons 'turn_right (lambda (turns) turns))
+     
+     (cons 'move_backward (lambda (distance) distance))
+     (cons 'move_forward (lambda (distance) distance))
+     
+     (cons 'pick_object (lambda (name) name))
+     (cons 'drop_object (lambda (name) name))
+
      (cons 'x (lambda () x))
      (cons 'y (lambda () y))
      (cons 'direction (lambda () direction))
