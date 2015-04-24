@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -53,7 +54,17 @@ namespace IronFist
         // Define the event handlers.
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            var text = System.IO.File.ReadAllText(e.FullPath);
+            var file = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            string text = "";
+            
+            using (var sr = new StreamReader(file, Encoding.Default))
+            {
+                while (!sr.EndOfStream)
+                {
+                    text += sr.ReadLine();
+                }
+            }
+
             Application.Current.Dispatcher.Invoke(new Action(() => { LogTextBlock.Text = text; }));
         }
     }
