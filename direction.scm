@@ -2,9 +2,8 @@
 
 (provide create-direction)
 
-(define (create-direction init)
+(define (create-direction direction)
   (let* (
-         (direction init)
          (turn (lambda (turns)
                  (set! direction (modulo (+ direction turns) 4))))
         )
