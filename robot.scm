@@ -1,14 +1,24 @@
 #lang racket
 
-(require "factory.rkt")
-(require "turn.rkt")
+(require "direction.rkt")
 
-(define (call obj method args)
-  (apply (cdr (assq method obj)) args))
+(provice create-robot)
 
-(define direction (create-direction 2))
-
-(call direction 'turn_left '(1))
-(call direction 'turn_left '(1))
-(call direction 'turn_left '(1))
-(call direction 'turn_left '(1))
+(define (create-robot x y direction)
+ (let* (
+        (move (lambda (distance)
+                (if (= distance 0)
+                    (cons x y))
+                (else
+                    (set! x )
+                    (set! y )
+                    (validPosition? x y)
+                    (move (- 1 distance)))
+        )
+    (list
+     (cons 'move_forward (lambda (turns) (turn turns) direction))
+     (cons 'x (lambda () x))
+     (cons 'y (lambda () y))
+     (cons 'direction (lambda () direction))
+     )
+  ))
