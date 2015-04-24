@@ -347,16 +347,22 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Scheme\Floorplans\default.rkt">
+    <None Include="Scheme\direction.scm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Scheme\move.rkt">
+    <None Include="Scheme\Floorplans\factory.scm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Scheme\robot.rkt">
+    <None Include="Scheme\main.scm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Scheme\turn.rkt">
+    <None Include="Scheme\move.scm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Scheme\robot.scm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Scheme\hello-scheme.scm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="test.ss" />
