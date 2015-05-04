@@ -67,6 +67,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Handlers\MapHandler.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -362,7 +363,7 @@
     <None Include="Scheme\robot.scm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Scheme\hello-scheme.scm">
+    <None Include="Scheme\log.scm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="test.ss" />
