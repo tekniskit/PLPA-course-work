@@ -29,7 +29,8 @@ namespace IronFist
         {
             InitializeComponent();
             "(include \"Scheme/main.scm\")".Eval();
-            mapHandler = new MapHandler();
+            mapHandler = new MapHandler(MapCanvas);
+            mapHandler.DrawMap();
             
             CreateFileWatcher();
         }
