@@ -37,7 +37,8 @@ namespace IronFist
 
         private void RunButton_Click(object sender, RoutedEventArgs e)
         {
-            ResultLabel.Content = InputA.Text.Eval();
+            //TextBlockConsoleOutput.Text = InputA.Text.Eval().ToString();
+            InstructionHandler.Run(InputA.Text);
         }
 
         public void CreateFileWatcher()
@@ -70,7 +71,7 @@ namespace IronFist
                 }
             }
 
-            Application.Current.Dispatcher.Invoke(new Action(() => { LogTextBlock.Text = text; }));
+            Application.Current.Dispatcher.Invoke(new Action(() => { TextBlockConsoleOutput.Text = text; }));
         }
     }
 }
