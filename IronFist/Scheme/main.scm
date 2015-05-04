@@ -1,14 +1,20 @@
-#lang racket
+; Load factory plan
+(include "Scheme/Floorplans/factory.scm")
+(include "Scheme/log.scm")
 
-(require "factory.scm")
-(require "direction.scm")
 
-(define (call obj method args)
-  (apply (cdr (assq method obj)) args))
+; ----------- Reimers old stuff
+;#lang racket
 
-(define direction (create-direction 2))
+;(require "factory.scm")
+;(require "direction.scm")
 
-(call direction 'turn_left '(1))
-(call direction 'turn_left '(1))
-(call direction 'turn_left '(1))
-(call direction 'turn_left '(1))
+;(define (call obj method args)
+;  (apply (cdr (assq method obj)) args))
+
+;(define direction (create-direction 2))
+
+;(call direction 'turn_left '(1))
+;(call direction 'turn_left '(1))
+;(call direction 'turn_left '(1))
+;(call direction 'turn_left '(1))
