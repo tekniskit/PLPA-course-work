@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using IronScheme;
 
@@ -41,8 +42,18 @@ namespace IronFist.Handlers
                 
             }
 
-            var joinedResult = string.Join(" ", result);
-            var resultFromScheme = joinedResult.Eval();
+            // This SHOULD be in Scheme however IronScheme threading library is impossible to import.
+            Task.Run(() =>
+            {
+                foreach (var ins in result)
+                {
+                    ins.Eval();
+                    Thread.Sleep(1000);
+                }
+            });
+            
+            //var joinedResult = string.Join(" ", result);
+            //var resultFromScheme = joinedResult.Eval();
         }
     }
 }
