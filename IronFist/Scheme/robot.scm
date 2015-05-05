@@ -14,6 +14,7 @@
 
 (define (turn_left turns) 
   (set! direction (modulo (+ direction turns) 4))
+  (thread-sleep 250)
   (log x y direction cargo))
 
 
@@ -36,6 +37,7 @@
 (define (step_loop distance step-length do-step!)
   (cond ((> distance 0)
          (do-step!)
+         (thread-sleep 500)
          (log x y direction cargo)
          (step_loop (- distance step-length) step-length do-step!))))
 
@@ -77,6 +79,7 @@
 
 (define (pick_object name)
   (set! cargo name)
+  (thread-sleep 1000)
   (log x y direction cargo))
 
 
