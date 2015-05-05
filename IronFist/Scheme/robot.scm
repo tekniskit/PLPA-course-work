@@ -1,12 +1,6 @@
-(require "Scheme/log.scm")
+(include "Scheme/log.scm")
 
-(provide turn_left)
-(provide turn_right)
-(provide move_forward)
-(provide move_backward)
-(provide pick_object)
-(provide drop_object)
-
+; Robot state
 (define x 0)
 (define y 0)
 (define direction 0)
@@ -15,7 +9,8 @@
 
 ; Turn
 (define (turn_left turns)
-  (set! direction (modulo (+ direction turns) 4)))
+  (set! direction (modulo (+ direction turns) 4))
+  (log x y direction cargo))
 
 (define (turn_right turns)
   (turn_left (- turns)))
@@ -32,7 +27,7 @@
   (step_loop distance step
              (if (even? direction)
                   (lambda () (set! x (+ (if (= 0 direction) step (- step)) x)))
-                  (lambda () (set! y (+ (if (= 3 direction) step (- step)) y))))))  
+                  (lambda () (set! y (+ (if (= 3 direction) step (- step)) y))))))
 
 (define (move_forward distance)
   (move distance 1))
@@ -43,7 +38,8 @@
 
 ; Cargo
 (define (pick_object name)
-  (set! cargo name))
+  (set! cargo name)
+  (log x y direction cargo))
 
 (define (drop_object)
   (pick_object ""))
