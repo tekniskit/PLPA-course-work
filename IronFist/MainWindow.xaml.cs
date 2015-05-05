@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using IronFist.Handlers;
 using IronScheme;
 
 namespace IronFist
@@ -23,16 +24,21 @@ namespace IronFist
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MapHandler mapHandler;
         public MainWindow()
         {
             InitializeComponent();
-            "(include \"Scheme/hello-scheme.scm\")".Eval();
+            "(include \"Scheme/main.scm\")".Eval();
+            mapHandler = new MapHandler(MapCanvas);
+            mapHandler.DrawMap();
+            
             CreateFileWatcher();
         }
 
         private void RunButton_Click(object sender, RoutedEventArgs e)
         {
-            ResultLabel.Content = InputA.Text.Eval();
+            //TextBlockConsoleOutput.Text = InputA.Text.Eval().ToString();
+            InstructionHandler.Run(InputA.Text);
         }
 
         public void CreateFileWatcher()
@@ -65,7 +71,7 @@ namespace IronFist
                 }
             }
 
-            Application.Current.Dispatcher.Invoke(new Action(() => { LogTextBlock.Text = text; }));
+            Application.Current.Dispatcher.Invoke(new Action(() => { TextBlockConsoleOutput.Text = text; }));
         }
     }
 }
