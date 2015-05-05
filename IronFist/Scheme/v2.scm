@@ -23,7 +23,8 @@
 (define (move_up distance step)
   (cond
     ((= 0 distance) distance)
-    ((set! y (+ step y))
+    (else
+     (set! y (+ step y))
      (move_up (- distance (abs step)) step))))
 
 
@@ -41,16 +42,10 @@
     (move_up distance (if (= 3 direction) step (- step)))))
 
 (define (move_forward distance)
-  (if 
-    (even? direction)
-    (move_right distance (if (= 0 direction) 1 -1))
-    (move_up distance (if (= 3 direction) 1 -1))))
+  (move distance 1))
 
 (define (move_backward distance)
-  (if 
-    (even? direction)
-    (move_right distance (if (= 0 direction) -1 1))
-    (move_up distance (if (= 3 direction) -1 1))))
+  (move distance -1))
 
 ; Cargo
 (define (pick_object name)
@@ -66,19 +61,5 @@
 (move_forward 5) (state)
 (turn_right 1) (state)
 (move_backward 7) (state)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
