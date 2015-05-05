@@ -1,8 +1,7 @@
 #lang racket
 
 ; Debug funcs
-(define (state) (display x) (display ",") (display y) (display ",") (display direction) (display "\n"))
-(define (show x) (display x) (display "\n"))
+(define (log) (display x) (display ",") (display y) (display ",") (display direction) (display "\n"))
 ; END
 
 
@@ -10,6 +9,7 @@
 (define y 0)
 (define direction 0)
 (define cargo 0)
+
 
 ; Turn
 (define (turn_left turns)
@@ -20,32 +20,24 @@
 
 
 ; Move
-(define (move_up distance step)
-  (cond
-    ((= 0 distance) distance)
-    (else
-     (set! y (+ step y))
-     (move_up (- distance (abs step)) step))))
-
-
-(define (move_right distance step)
-  (cond
-    ((= 0 distance) distance)
-    (else
-     (set! x (+ step x))
-     (move_right (- distance (abs step)) step))))
+(define (step_loop distance step do-step!)
+  (cond ((> distance 0)
+         (do-step!)
+         (log)
+         (step_loop (- distance (abs step)) step do-step!))))
 
 (define (move distance step)
-  (if 
-    (even? direction)
-    (move_right distance (if (= 0 direction) step (- step)))
-    (move_up distance (if (= 3 direction) step (- step)))))
+  (step_loop distance step
+             (if (even? direction)
+                  (lambda () (set! x (+ (if (= 0 direction) step (- step)) x)))
+                  (lambda () (set! y (+ (if (= 3 direction) step (- step)) y))))))  
 
 (define (move_forward distance)
   (move distance 1))
 
 (define (move_backward distance)
   (move distance -1))
+
 
 ; Cargo
 (define (pick_object name)
@@ -56,10 +48,10 @@
 
 
 ; Tests
-(move_forward 10) (state)
-(turn_right 1) (state)
-(move_forward 5) (state)
-(turn_right 1) (state)
-(move_backward 7) (state)
+(move_forward 10)
+(turn_right 1)
+(move_forward 5)
+(turn_right 1)
+(move_backward 7)
 
 
