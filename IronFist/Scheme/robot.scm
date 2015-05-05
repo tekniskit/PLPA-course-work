@@ -1,14 +1,16 @@
-#lang racket
+(require "Scheme/log.scm")
 
-; Debug funcs
-(define (log) (display x) (display ",") (display y) (display ",") (display direction) (display "\n"))
-; END
-
+(provide turn_left)
+(provide turn_right)
+(provide move_forward)
+(provide move_backward)
+(provide pick_object)
+(provide drop_object)
 
 (define x 0)
 (define y 0)
 (define direction 0)
-(define cargo 0)
+(define cargo "")
 
 
 ; Turn
@@ -23,7 +25,7 @@
 (define (step_loop distance step do-step!)
   (cond ((> distance 0)
          (do-step!)
-         (log)
+         (log x y direction cargo)
          (step_loop (- distance (abs step)) step do-step!))))
 
 (define (move distance step)
@@ -45,13 +47,5 @@
 
 (define (drop_object)
   (pick_object ""))
-
-
-; Tests
-(move_forward 10)
-(turn_right 1)
-(move_forward 5)
-(turn_right 1)
-(move_backward 7)
 
 
