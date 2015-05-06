@@ -51,11 +51,7 @@ namespace IronFist
         {
             try
             {
-                string ins =string.Join(" ", Instructions);
-                Task.Run(()=>{
-                    InstructionHandler.Run(ins);
-                });
-                
+                InstructionHandler.Run(string.Join(" ", Instructions));
             }
             catch (Exception exception)
             {
