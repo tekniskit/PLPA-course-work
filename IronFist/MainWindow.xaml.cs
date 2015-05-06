@@ -35,10 +35,16 @@ namespace IronFist
             CreateFileWatcher();
         }
 
-        private void RunButton_Click(object sender, RoutedEventArgs e)
+        private void RunButton_Click(object sender, RoutedEventArgs eventArgs)
         {
-            //TextBlockConsoleOutput.Text = InputA.Text.Eval().ToString();
-            InstructionHandler.Run(InputA.Text);
+            try
+            {
+                InstructionHandler.Run(InputA.Text);
+            }
+            catch (Exception exception)
+            {
+                ErrorConsole.Text = exception.Message;
+            }
         }
 
         public void CreateFileWatcher()
