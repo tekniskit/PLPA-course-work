@@ -1,4 +1,5 @@
 (include "Scheme/log.scm")
+(include "Scheme/Floorplans/factory.scm")
 
 ; Internal robot state
 (define x 0)
@@ -12,7 +13,7 @@
 ; Params:
 ;   turns = number of 90deg left turns
 
-(define (turn_left turns) 
+(define (turn_left turns)
   (set! direction (modulo (+ direction turns) 4))
   (thread-sleep 250)
   (log x y direction cargo)
@@ -28,19 +29,38 @@
   (turn_left (- turns))) ; A right turn is a negative left turn
 
 
-; Function: step_loop
+; Function: can-step?
+; Description: Checks if the next space is free
+; Params:
+;   step: The length of the steps. A negative number means backward movement.
+
+(define (can-step? step)
+  (if (even? direction)
+    (let* (
+      (next-x (+ (if (= 0 direction) step (- step)) x))
+      (tile (vector-ref (vector-ref factory y) next-x)))
+      (or (= tile '*) (= tile '!)))
+    (let* (
+      (next-y (+ (if (= 3 direction) step (- step)) y))
+      (tile (vector-ref (vector-ref factory next-y) x)))
+      (or (= tile '*) (= tile '!)))))
+
+
+; Function: step-loop
 ; Description: Tries to move the robot a distance while validating every step.
 ; Params:
 ;   distance = Total distance the robot should move.
-;   step = The length of the steps. Must be a non-zero positive integer.
+;   step = The length of the steps. A negative number means backward movement.
 ;   do-step! = A function which shall update the robots state.
 
-(define (step_loop distance step-length do-step!)
+(define (step-loop distance step do-step!)
   (cond ((> distance 0)
-         (do-step!)
-         (thread-sleep 500)
-         (log x y direction cargo)
-         (step_loop (- distance step-length) step-length do-step!))))
+    (cond ((can-step? step)
+      (do-step!)
+      (thread-sleep 500)
+      (log x y direction cargo)
+      (step-loop (- distance (abs step)) step do-step!))
+      (else (log-error "Illegal move. Robot stopped."))))))
 
 
 ; Function: move
@@ -50,7 +70,7 @@
 ;   step = The length of the steps. A negative number means backward movement.
 
 (define (move distance step)
-  (step_loop distance (abs step)
+  (step-loop distance (abs step)
              (if (even? direction)
                   (lambda () (set! x (+ (if (= 0 direction) step (- step)) x)))
                   (lambda () (set! y (+ (if (= 3 direction) step (- step)) y))))))
