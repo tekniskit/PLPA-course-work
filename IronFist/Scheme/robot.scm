@@ -2,7 +2,7 @@
 
 ; Internal robot state
 (define x 0)
-(define y 0)
+(define y 8)
 (define direction 0) ; 0 = east, 1 = north, 2 = west, 3 = south
 (define cargo "") ; Name of an object as a string
 
