@@ -7,6 +7,9 @@
   (close-output-port file-handle))
 
 
+; Function: inc-program-counter!
+; Description: Increments and logs an integer to program-counter.txt.
+;              First time the function is called it logs 1. Second time it logs 2.
 
 (define counter 0)
 
