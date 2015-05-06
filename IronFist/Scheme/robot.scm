@@ -35,16 +35,17 @@
 ;   step: The length of the steps. A negative number means backward movement.
 
 (define (can-step? step)
+  (let ((allowed-tiles '(* ! ^ v < >))))
   (if (even? direction)
     (let* (
       (next-x (+ (if (= 0 direction) step (- step)) x))
       (tile (vector-ref (vector-ref factory y) next-x)))
-      (or (equal? tile '*) (equal? tile '!)))
+      (member tile allowed-tiles))
 
     (let* (
       (next-y (+ (if (= 3 direction) step (- step)) y))
       (tile (vector-ref (vector-ref factory next-y) x)))
-      (or (equal? tile '*) (equal? tile '!)))))
+      (member tile allowed-tiles))))
 
 
 ; Function: step-loop
@@ -151,4 +152,4 @@
     ((not (can-drop?)) (log-error "The robot is not at the correct drop point."))
 
     (else
-      (pick_object "")))
+      (pick_object ""))))
