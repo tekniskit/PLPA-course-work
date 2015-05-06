@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -15,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using IronFist.Handlers;
+using IronFist.Model;
 using IronScheme;
 
 namespace IronFist
@@ -25,13 +27,22 @@ namespace IronFist
     public partial class MainWindow : Window
     {
         private MapHandler mapHandler;
+        public ObservableCollection<Instruction> Instructions;
+  
         public MainWindow()
         {
             InitializeComponent();
             "(include \"Scheme/main.scm\")".Eval();
             mapHandler = new MapHandler(MapCanvas);
             mapHandler.DrawMap();
+            Instructions = new ObservableCollection<Instruction>();
+
+      
+    
+            Instructions.Add(new Instruction());
+            InstructionListView.ItemsSource = Instructions;
             
+           
             CreateFileWatcher();
         }
 
@@ -39,7 +50,8 @@ namespace IronFist
         {
             try
             {
-                InstructionHandler.Run(InputA.Text);
+                string ins =string.Join(" ", Instructions);
+                InstructionHandler.Run(ins);
             }
             catch (Exception exception)
             {
@@ -78,6 +90,11 @@ namespace IronFist
             }
 
             Application.Current.Dispatcher.Invoke(new Action(() => { TextBlockConsoleOutput.Text = text; }));
+        }
+
+        private void AddInstruction(object sender, RoutedEventArgs e)
+        {
+            Instructions.Add(new Instruction());
         }
     }
 }
