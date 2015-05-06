@@ -15,7 +15,8 @@
 (define (turn_left turns) 
   (set! direction (modulo (+ direction turns) 4))
   (thread-sleep 250)
-  (log x y direction cargo))
+  (log x y direction cargo)
+  (inc-program-counter!))
 
 
 ; Function: turn_right
@@ -61,7 +62,8 @@
 ;   distance = Total distance the robot should move.
 
 (define (move_forward distance)
-  (move distance 1))
+  (move distance 1)
+  (inc-program-counter!))
 
 
 ; Function: move
@@ -80,7 +82,8 @@
 (define (pick_object name)
   (set! cargo name)
   (thread-sleep 1000)
-  (log x y direction cargo))
+  (log x y direction cargo)
+  (inc-program-counter!))
 
 
 ; Function: drop_object
