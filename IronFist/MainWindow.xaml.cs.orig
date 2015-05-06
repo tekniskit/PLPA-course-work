@@ -52,10 +52,7 @@ namespace IronFist
             try
             {
                 string ins =string.Join(" ", Instructions);
-                Task.Run(()=>{
-                    InstructionHandler.Run(ins);
-                });
-                
+                InstructionHandler.Run(ins);
             }
             catch (Exception exception)
             {
@@ -98,11 +95,11 @@ namespace IronFist
             Application.Current.Dispatcher.Invoke(new Action(() => { TextBlockConsoleOutput.Text = text; }));
         }
 
+<<<<<<< HEAD
         private void AddInstruction(object sender, RoutedEventArgs e)
         {
-        Instructions.Add(new Instruction());
-        }
-        
+            Instructions.Add(new Instruction());
+=======
         private void TouchRobot(string text)
         {
             if (text.Length == 0)
@@ -118,6 +115,7 @@ namespace IronFist
             int.TryParse(values[1], out yVal);
             int.TryParse(values[2], out direc);
             Application.Current.Dispatcher.Invoke(() => { mapHandler.SetRobot(xVal, yVal, direc); });
+>>>>>>> master
         }
     }
 }
