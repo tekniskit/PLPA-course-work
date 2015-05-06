@@ -16,7 +16,7 @@
 (define (inc-program-counter!)
   (define file-handle (open-output-file "program-counter.txt"))
   (set! counter (+ 1 counter))
-  (display counter file-handle)
+  (display counter file-handle))
 
 
 ; Function: log-error
