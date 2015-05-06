@@ -17,4 +17,12 @@
   (define file-handle (open-output-file "program-counter.txt"))
   (set! counter (+ 1 counter))
   (display counter file-handle)
+
+
+; Function: log-error
+; Description: Logs an error message to error.txt.
+
+(define (log-error msg)
+  (define file-handle (open-output-file "error.txt"))
+  (display msg file-handle)
   (close-output-port file-handle))
