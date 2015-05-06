@@ -119,10 +119,10 @@
   (let
     ((tile (vector-ref (vector-ref factory y) x)))
       (cond
-        ((equal? tile 'v) (equal? (- name 1) (vector-ref (vector-ref factory (+ y 1)) x)))
-        ((equal? tile '^) (equal? (- name 1) (vector-ref (vector-ref factory (- y 1)) x)))
-        ((equal? tile '<) (equal? (- name 1) (vector-ref (vector-ref factory (- x 1)) x)))
-        ((equal? tile '>) (equal? (- name 1) (vector-ref (vector-ref factory (+ x 1)) x)))
+        ((equal? tile 'v) (equal? (- cargo 1) (vector-ref (vector-ref factory (+ y 1)) x)))
+        ((equal? tile '^) (equal? (- cargo 1) (vector-ref (vector-ref factory (- y 1)) x)))
+        ((equal? tile '<) (equal? (- cargo 1) (vector-ref (vector-ref factory (- x 1)) x)))
+        ((equal? tile '>) (equal? (- cargo 1) (vector-ref (vector-ref factory (+ x 1)) x)))
         (else #f))))
 
 
@@ -133,11 +133,7 @@
 
 (define (pick_object name)
   (cond
-    ((not (and (not (equal? name "")) (equal? cargo "") (can-pick? name)))
-      (log-error "Cannot pick object"))
-
-    ((not (and (equal? name "") (can-drop?)))
-      (log-error "Cannot drop object"))
+    ((not (can-pick? name)) (log-error "The robot is not at the correct pick up point."))
 
     (else
       (set! cargo name)
@@ -151,5 +147,8 @@
 ; Params:
 
 (define (drop_object)
-  (pick_object "")
-  (log-error "The robot is not at the correct drop point."))
+  (cond
+    ((not (can-drop?)) (log-error "The robot is not at the correct drop point."))
+
+    (else
+      (pick_object "")))
