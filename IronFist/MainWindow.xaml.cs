@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -77,7 +78,26 @@ namespace IronFist
                 }
             }
 
+            TouchRobot(text);
+
             Application.Current.Dispatcher.Invoke(new Action(() => { TextBlockConsoleOutput.Text = text; }));
+        }
+
+        private void TouchRobot(string text)
+        {
+            if (text.Length == 0)
+                return;
+
+            var values = Regex.Split(text, ";");
+            int xVal;
+            int yVal;
+            int direc;
+            var cargo = values[3];
+
+            int.TryParse(values[0], out xVal);
+            int.TryParse(values[1], out yVal);
+            int.TryParse(values[2], out direc);
+            Application.Current.Dispatcher.Invoke(() => { mapHandler.SetRobot(xVal, yVal, direc); });
         }
     }
 }
