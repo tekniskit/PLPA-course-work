@@ -37,14 +37,7 @@ namespace IronFist
 
         private void RunButton_Click(object sender, RoutedEventArgs eventArgs)
         {
-            try
-            {
-                InstructionHandler.Run(InputA.Text);
-            }
-            catch (Exception exception)
-            {
-                ErrorConsole.Text = exception.Message;
-            }
+            InstructionHandler.Run(InputA.Text);
         }
 
         public void CreateFileWatcher()
