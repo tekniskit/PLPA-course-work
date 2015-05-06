@@ -1,8 +1,9 @@
 (include "Scheme/log.scm")
+(include "Scheme/Floorplans/factory.scm")
 
 ; Internal robot state
 (define x 0)
-(define y 0)
+(define y 8)
 (define direction 0) ; 0 = east, 1 = north, 2 = west, 3 = south
 (define cargo "") ; Name of an object as a string
 
@@ -12,10 +13,11 @@
 ; Params:
 ;   turns = number of 90deg left turns
 
-(define (turn_left turns) 
+(define (turn_left turns)
   (set! direction (modulo (+ direction turns) 4))
   (thread-sleep 250)
-  (log x y direction cargo))
+  (log x y direction cargo)
+  (inc-program-counter!))
 
 
 ; Function: turn_right
@@ -27,19 +29,39 @@
   (turn_left (- turns))) ; A right turn is a negative left turn
 
 
-; Function: step_loop
+; Function: can-step?
+; Description: Checks if the next space is free
+; Params:
+;   step: The length of the steps. A negative number means backward movement.
+
+(define (can-step? step)
+  (if (even? direction)
+    (let* (
+      (next-x (+ (if (= 0 direction) step (- step)) x))
+      (tile (vector-ref (vector-ref factory y) next-x)))
+      (or (equal? tile '*) (equal? tile '!)))
+
+    (let* (
+      (next-y (+ (if (= 3 direction) step (- step)) y))
+      (tile (vector-ref (vector-ref factory next-y) x)))
+      (or (equal? tile '*) (equal? tile '!)))))
+
+
+; Function: step-loop
 ; Description: Tries to move the robot a distance while validating every step.
 ; Params:
 ;   distance = Total distance the robot should move.
-;   step = The length of the steps. Must be a non-zero positive integer.
+;   step = The length of the steps. A negative number means backward movement.
 ;   do-step! = A function which shall update the robots state.
 
-(define (step_loop distance step-length do-step!)
+(define (step-loop distance step do-step!)
   (cond ((> distance 0)
-         (do-step!)
-         (thread-sleep 500)
-         (log x y direction cargo)
-         (step_loop (- distance step-length) step-length do-step!))))
+    (cond ((can-step? step)
+      (do-step!)
+      (thread-sleep 500)
+      (log x y direction cargo)
+      (step-loop (- distance (abs step)) step do-step!))
+      (else (log-error "Illegal move. Robot stopped."))))))
 
 
 ; Function: move
@@ -49,7 +71,7 @@
 ;   step = The length of the steps. A negative number means backward movement.
 
 (define (move distance step)
-  (step_loop distance (abs step)
+  (step-loop distance (abs step)
              (if (even? direction)
                   (lambda () (set! x (+ (if (= 0 direction) step (- step)) x)))
                   (lambda () (set! y (+ (if (= 3 direction) step (- step)) y))))))
@@ -61,7 +83,8 @@
 ;   distance = Total distance the robot should move.
 
 (define (move_forward distance)
-  (move distance 1))
+  (move distance 1)
+  (inc-program-counter!))
 
 
 ; Function: move
@@ -72,15 +95,55 @@
   (move distance -1))
 
 
+; Function: can-pick?
+; Description: Checks if the robot can pick up the given item.
+; Params:
+;   name: The item which the robot wants to pick up.
+
+(define (can-pick? name)
+  (let
+    ((tile (vector-ref (vector-ref factory y) x)))
+      (cond 
+        ((equal? tile 'v) (equal? name (vector-ref (vector-ref factory (- y 1)) x)))
+        ((equal? tile '^) (equal? name (vector-ref (vector-ref factory (+ y 1)) x)))
+        ((equal? tile '<) (equal? name (vector-ref (vector-ref factory (+ x 1)) x)))
+        ((equal? tile '>) (equal? name (vector-ref (vector-ref factory (- x 1)) x)))
+        (else #f))))
+
+
+; Function: can-drop?
+; Description: Checks if the robot is at the dropoff point.
+; Params:
+
+(define (can-drop?)
+  (let
+    ((tile (vector-ref (vector-ref factory y) x)))
+      (cond
+        ((equal? tile 'v) (equal? (- name 1) (vector-ref (vector-ref factory (+ y 1)) x)))
+        ((equal? tile '^) (equal? (- name 1) (vector-ref (vector-ref factory (- y 1)) x)))
+        ((equal? tile '<) (equal? (- name 1) (vector-ref (vector-ref factory (- x 1)) x)))
+        ((equal? tile '>) (equal? (- name 1) (vector-ref (vector-ref factory (+ x 1)) x)))
+        (else #f))))
+
+
 ; Function: pick_object
 ; Description: Tries to pick up an object.
 ; Params:
 ;   name = Name of object as a string
 
 (define (pick_object name)
-  (set! cargo name)
-  (thread-sleep 1000)
-  (log x y direction cargo))
+  (cond
+    ((not (and (not (equal? name "")) (equal? cargo "") (can-pick? name)))
+      (log-error "Cannot pick object"))
+
+    ((not (and (equal? name "") (can-drop?)))
+      (log-error "Cannot drop object"))
+
+    (else
+      (set! cargo name)
+      (thread-sleep 1000)
+      (log x y direction cargo)
+      (inc-program-counter!))))
 
 
 ; Function: drop_object
@@ -88,6 +151,5 @@
 ; Params:
 
 (define (drop_object)
-  (pick_object ""))
-
-
+  (pick_object "")
+  (log-error "The robot is not at the correct drop point."))
