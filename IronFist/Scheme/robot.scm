@@ -39,11 +39,12 @@
     (let* (
       (next-x (+ (if (= 0 direction) step (- step)) x))
       (tile (vector-ref (vector-ref factory y) next-x)))
-      (or (= tile '*) (= tile '!)))
+      (or (equal? tile '*) (equal? tile '!)))
+
     (let* (
       (next-y (+ (if (= 3 direction) step (- step)) y))
       (tile (vector-ref (vector-ref factory next-y) x)))
-      (or (= tile '*) (= tile '!)))))
+      (or (equal? tile '*) (equal? tile '!)))))
 
 
 ; Function: step-loop
@@ -94,16 +95,55 @@
   (move distance -1))
 
 
+; Function: can-pick?
+; Description: Checks if the robot can pick up the given item.
+; Params:
+;   name: The item which the robot wants to pick up.
+
+(define (can-pick? name)
+  (let
+    ((tile (vector-ref (vector-ref factory y) x)))
+      (cond 
+        ((equal? tile 'v) (equal? name (vector-ref (vector-ref factory (- y 1)) x)))
+        ((equal? tile '^) (equal? name (vector-ref (vector-ref factory (+ y 1)) x)))
+        ((equal? tile '<) (equal? name (vector-ref (vector-ref factory (+ x 1)) x)))
+        ((equal? tile '>) (equal? name (vector-ref (vector-ref factory (- x 1)) x)))
+        (else #f))))
+
+
+; Function: can-drop?
+; Description: Checks if the robot is at the dropoff point.
+; Params:
+
+(define (can-drop?)
+  (let
+    ((tile (vector-ref (vector-ref factory y) x)))
+      (cond
+        ((equal? tile 'v) (equal? (- name 1) (vector-ref (vector-ref factory (+ y 1)) x)))
+        ((equal? tile '^) (equal? (- name 1) (vector-ref (vector-ref factory (- y 1)) x)))
+        ((equal? tile '<) (equal? (- name 1) (vector-ref (vector-ref factory (- x 1)) x)))
+        ((equal? tile '>) (equal? (- name 1) (vector-ref (vector-ref factory (+ x 1)) x)))
+        (else #f))))
+
+
 ; Function: pick_object
 ; Description: Tries to pick up an object.
 ; Params:
 ;   name = Name of object as a string
 
 (define (pick_object name)
-  (set! cargo name)
-  (thread-sleep 1000)
-  (log x y direction cargo)
-  (inc-program-counter!))
+  (cond
+    ((not (and (not (equal? name "")) (equal? cargo "") (can-pick? name)))
+      (log-error "Cannot pick object"))
+
+    ((not (and (equal? name "") (can-drop?)))
+      (log-error "Cannot drop object"))
+
+    (else
+      (set! cargo name)
+      (thread-sleep 1000)
+      (log x y direction cargo)
+      (inc-program-counter!))))
 
 
 ; Function: drop_object
@@ -111,6 +151,5 @@
 ; Params:
 
 (define (drop_object)
-  (pick_object ""))
-
-
+  (pick_object "")
+  (log-error "The robot is not at the correct drop point."))
