@@ -60,6 +60,8 @@ namespace IronFist
                     {
                         InstructionHandler.Run(ins);
                         Busy = false;
+                        Instructions.Last().BackgroundColor = Brushes.Green;
+                        MessageBox.Show("Okey dokey", "Job's done!", MessageBoxButton.OK, MessageBoxImage.Information);
                     });
 
                 }
@@ -139,7 +141,11 @@ namespace IronFist
             try
             {
                 int number = int.Parse(text);
-                Instructions[number - 1].BackgroundColor = Brushes.Red;
+                Instructions[number].BackgroundColor = Brushes.Red;
+                if (number != 0)
+                {
+                    Instructions[number - 1].BackgroundColor = Brushes.Green;
+                }
             }
             catch (Exception)
             {   
