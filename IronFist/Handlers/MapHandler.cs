@@ -61,9 +61,26 @@ namespace IronFist.Handlers
             _northImage = new ImageBrush { ImageSource = new BitmapImage(new Uri(@"../../Images/robot-1.png", UriKind.RelativeOrAbsolute)) };
             _westImage = new ImageBrush { ImageSource = new BitmapImage(new Uri(@"../../Images/robot-2.png", UriKind.RelativeOrAbsolute)) };
             _southImage = new ImageBrush { ImageSource = new BitmapImage(new Uri(@"../../Images/robot-3.png", UriKind.RelativeOrAbsolute)) };
+
+            DrawMap();
+            InitRobotPost();
         }
 
-        public void DrawMap()
+        private void InitRobotPost()
+        {
+            // Set initial robot position and direction
+            int robotPosX;
+            int robotPosY;
+            int robotDirection;
+
+            int.TryParse("x".Eval().ToString(), out robotPosX);
+            int.TryParse("y".Eval().ToString(), out robotPosY);
+            int.TryParse("direction".Eval().ToString(), out robotDirection);
+
+            SetRobot(robotPosX, robotPosY, robotDirection);
+        }
+
+        private void DrawMap()
         {
             var row = _mapList.Count;
             var column = _mapList.First().Count;
