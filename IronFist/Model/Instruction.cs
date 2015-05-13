@@ -32,7 +32,14 @@ namespace IronFist.Model
                     Values.Clear();
                     Values.Add("1");
                     Values.Add("2");
-                    Values.Add("3");  
+                    Values.Add("3");
+                    Values.Add("4");
+                    Values.Add("5");
+                    Values.Add("6");
+                    Values.Add("7");
+                    Values.Add("8");
+                    Values.Add("9");
+                    Values.Add("10");
                 }
                 
             }
@@ -43,7 +50,31 @@ namespace IronFist.Model
 
         private string ToScheme()
         {
-            return (Command == null) ? " " :  '(' + Command.ToLower().Replace(" ", "_") +' '+ Value+ ')';
+            var value = "";
+            if (_command == "PICK OBJECT")
+            {
+                if (Value == "Hammer")
+                {
+                    value = "'0";
+                }
+                else if (Value == "Wrench")
+                {
+                    value = "'1";
+                }
+                else if (Value == "Drill")
+                {
+                    value = "'2";
+                }
+            }
+            else if (_command == "DROP OBJECT")
+            {
+                value = "";
+            }
+            else
+            {
+                value = Value;
+            }
+            return (Command == null) ? " " :  '(' + Command.ToLower().Replace(" ", "_") +' '+  value + ')';
         }
 
         public override string ToString()

@@ -20,10 +20,7 @@ namespace IronFist.Handlers
          */
         public static void Run(string instructionsInput)
         {
-            Task.Run(() =>
-            {
-                instructionsInput.Eval();
-            });
+            instructionsInput.Eval();
         }
     }
 }
