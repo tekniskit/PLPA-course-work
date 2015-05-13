@@ -10,7 +10,7 @@
                     <GridViewColumn Header="Instruction" Width="146">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox Name="CommandComboBox" ItemsSource="{Binding Commands}" SelectedValue="{Binding Path=Command}" Width="130" />
+                                <ComboBox Name="CommandComboBox" Foreground="{Binding Path=BackgroundColor}" ItemsSource="{Binding Commands}" SelectedValue="{Binding Path=Command}" Width="130" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -18,7 +18,7 @@
                     <GridViewColumn Header="Value" Width="87">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox ItemsSource="{Binding Values}" SelectedValue="{Binding Path=Value}" Width="60" />
+                                <ComboBox ItemsSource="{Binding Values}" Foreground="{Binding Path=BackgroundColor}" SelectedValue="{Binding Path=Value}" Width="60" IsEnabled="{Binding Path=Enabled}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

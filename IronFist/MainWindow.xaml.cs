@@ -45,6 +45,7 @@ namespace IronFist
             
            
             CreateFileWatcher();
+            CreateCounterFileWatcher();
         }
 
         private void RunButton_Click(object sender, RoutedEventArgs eventArgs)
@@ -106,6 +107,43 @@ namespace IronFist
             TouchRobot(text);
 
             Application.Current.Dispatcher.Invoke(new Action(() => { TextBlockConsoleOutput.Text = text; }));
+        }
+        public void CreateCounterFileWatcher()
+        {
+            // Create a new FileSystemWatcher and set its properties.
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.Path = System.AppDomain.CurrentDomain.BaseDirectory;
+            watcher.NotifyFilter = NotifyFilters.LastWrite;
+            watcher.Filter = "program-counter.txt";
+
+            // Add event handlers.
+            watcher.Changed += new FileSystemEventHandler(OnCounterChanged);
+            watcher.Created += new FileSystemEventHandler(OnCounterChanged);
+
+            // Begin watching.
+            watcher.EnableRaisingEvents = true;
+        }
+
+        private void OnCounterChanged(object sender, FileSystemEventArgs e)
+        {
+            var file = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            string text = "";
+            
+            using (var sr = new StreamReader(file, Encoding.Default))
+            {
+                while (!sr.EndOfStream)
+                {
+                    text += sr.ReadLine();
+                }
+            }
+            try
+            {
+                int number = int.Parse(text);
+                Instructions[number - 1].BackgroundColor = Brushes.Red;
+            }
+            catch (Exception)
+            {   
+            }
         }
 
         private void AddInstruction(object sender, RoutedEventArgs e)
