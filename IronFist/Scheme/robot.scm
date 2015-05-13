@@ -44,18 +44,15 @@
 ; Params:
 ;   step: The length of the steps. A negative number means backward movement.
 
-(define (can-step? step)
-  (let ((allowed-tiles '(* ! ^ v < >)))
-  (if (even? direction)
-    (let* (
-      (next-x (+ (if (= 0 direction) step (- step)) x))
-      (tile (vector-ref (vector-ref factory y) next-x)))
-      (member tile allowed-tiles))
+(define (allowed-tile? x y)
+    (and (> y 0) (< y (vector-length factory))
+         (> x 0) (< x (vector-length (vector-ref factory y)))
+         (member (vector-ref (vector-ref factory y) x) '(* ! ^ v < >))))
 
-    (let* (
-      (next-y (+ (if (= 3 direction) step (- step)) y))
-      (tile (vector-ref (vector-ref factory next-y) x)))
-      (member tile allowed-tiles)))))
+(define (can-step? step)
+  (if (even? direction)
+    (allowed-tile? (+ (if (= 0 direction) step (- step)) x) y)
+    (allowed-tile? x (+ (if (= 3 direction) step (- step)) y))))
 
 
 ; Function: step-loop
