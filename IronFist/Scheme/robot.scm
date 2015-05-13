@@ -8,6 +8,16 @@
 (define cargo "") ; Name of an object as a string
 
 
+; Function: reset_robot
+; Description: Resets robot state.
+
+(define (reset-robot!)
+  (set! x 0)
+  (set! y 8)
+  (set! direction 0)
+  (set! cargo ""))
+
+
 ; Function: turn_left
 ; Description: Turns the robot to the left
 ; Params:

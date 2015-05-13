@@ -11,7 +11,7 @@
 ; Description: Increments and logs an integer to program-counter.txt.
 ;              First time the function is called it logs 1. Second time it logs 2.
 
-(define counter 0)
+(define counter -1)
 
 (define (inc-program-counter!)
   (define file-handle (open-output-file "program-counter.txt"))
@@ -19,6 +19,12 @@
   (display counter file-handle)
   (close-output-port file-handle))
 
+
+; Function: reset-program-counter!
+; Description: Resets the program counter.
+
+(define (reset-program-counter!)
+  (set! counter -1))
 
 ; Function: log-error
 ; Description: Logs an error message to error.txt.
