@@ -45,8 +45,8 @@
 ;   step: The length of the steps. A negative number means backward movement.
 
 (define (allowed-tile? x y)
-    (and (> y 0) (< y (vector-length factory))
-         (> x 0) (< x (vector-length (vector-ref factory y)))
+    (and (>= y 0) (< y (vector-length factory))
+         (>= x 0) (< x (vector-length (vector-ref factory y)))
          (member (vector-ref (vector-ref factory y) x) '(* ! ^ v < >))))
 
 (define (can-step? step)
