@@ -29,6 +29,7 @@ namespace IronFist
     {
         private MapHandler mapHandler;
         public ObservableCollection<Instruction> Instructions;
+        public bool Busy = false;
   
         public MainWindow()
         {
@@ -49,17 +50,27 @@ namespace IronFist
 
         private void RunButton_Click(object sender, RoutedEventArgs eventArgs)
         {
-            try
+            if (!Busy)
             {
-                string ins =string.Join(" ", Instructions);
-                Task.Run(()=>{
-                    InstructionHandler.Run(ins);
-                });
-                
+                Busy = true;
+                try
+                {
+                    string ins = string.Join(" ", Instructions);
+                    Task.Run(() =>
+                    {
+                        InstructionHandler.Run(ins);
+                        Busy = false;
+                    });
+
+                }
+                catch (Exception exception)
+                {
+                    ErrorConsole.Text = exception.Message;
+                }   
             }
-            catch (Exception exception)
+            else
             {
-                ErrorConsole.Text = exception.Message;
+                MessageBox.Show("You can only run one command at a time", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
