@@ -8,16 +8,26 @@
 (define cargo "") ; Name of an object as a string
 
 
+; Function: reset_robot
+; Description: Resets robot state.
+
+(define (reset-robot!)
+  (set! x 0)
+  (set! y 8)
+  (set! direction 0)
+  (set! cargo ""))
+
+
 ; Function: turn_left
 ; Description: Turns the robot to the left
 ; Params:
 ;   turns = number of 90deg left turns
 
 (define (turn_left turns)
-  (set! direction (modulo (+ direction turns) 4))
+  (inc-program-counter!)
   (thread-sleep 250)
-  (log x y direction cargo)
-  (inc-program-counter!))
+  (set! direction (modulo (+ direction turns) 4))
+  (log x y direction cargo))
 
 
 ; Function: turn_right
@@ -35,16 +45,17 @@
 ;   step: The length of the steps. A negative number means backward movement.
 
 (define (can-step? step)
+  (let ((allowed-tiles '(* ! ^ v < >)))
   (if (even? direction)
     (let* (
       (next-x (+ (if (= 0 direction) step (- step)) x))
       (tile (vector-ref (vector-ref factory y) next-x)))
-      (or (equal? tile '*) (equal? tile '!)))
+      (member tile allowed-tiles))
 
     (let* (
       (next-y (+ (if (= 3 direction) step (- step)) y))
       (tile (vector-ref (vector-ref factory next-y) x)))
-      (or (equal? tile '*) (equal? tile '!)))))
+      (member tile allowed-tiles)))))
 
 
 ; Function: step-loop
@@ -57,8 +68,8 @@
 (define (step-loop distance step do-step!)
   (cond ((> distance 0)
     (cond ((can-step? step)
-      (do-step!)
       (thread-sleep 500)
+      (do-step!)
       (log x y direction cargo)
       (step-loop (- distance (abs step)) step do-step!))
       (else (log-error "Illegal move. Robot stopped."))))))
@@ -83,8 +94,8 @@
 ;   distance = Total distance the robot should move.
 
 (define (move_forward distance)
-  (move distance 1)
-  (inc-program-counter!))
+  (inc-program-counter!)
+  (move distance 1))
 
 
 ; Function: move
@@ -119,10 +130,10 @@
   (let
     ((tile (vector-ref (vector-ref factory y) x)))
       (cond
-        ((equal? tile 'v) (equal? (- name 1) (vector-ref (vector-ref factory (+ y 1)) x)))
-        ((equal? tile '^) (equal? (- name 1) (vector-ref (vector-ref factory (- y 1)) x)))
-        ((equal? tile '<) (equal? (- name 1) (vector-ref (vector-ref factory (- x 1)) x)))
-        ((equal? tile '>) (equal? (- name 1) (vector-ref (vector-ref factory (+ x 1)) x)))
+        ((equal? tile 'v) (equal? (- cargo 1) (vector-ref (vector-ref factory (+ y 1)) x)))
+        ((equal? tile '^) (equal? (- cargo 1) (vector-ref (vector-ref factory (- y 1)) x)))
+        ((equal? tile '<) (equal? (- cargo 1) (vector-ref (vector-ref factory (- x 1)) x)))
+        ((equal? tile '>) (equal? (- cargo 1) (vector-ref (vector-ref factory (+ x 1)) x)))
         (else #f))))
 
 
@@ -133,17 +144,13 @@
 
 (define (pick_object name)
   (cond
-    ((not (and (not (equal? name "")) (equal? cargo "") (can-pick? name)))
-      (log-error "Cannot pick object"))
-
-    ((not (and (equal? name "") (can-drop?)))
-      (log-error "Cannot drop object"))
+    ((not (can-pick? name)) (log-error "The robot is not at the correct pick up point."))
 
     (else
-      (set! cargo name)
-      (thread-sleep 1000)
-      (log x y direction cargo)
-      (inc-program-counter!))))
+     (inc-program-counter!)
+     (thread-sleep 1000)
+     (set! cargo name)
+     (log x y direction cargo))))
 
 
 ; Function: drop_object
@@ -151,5 +158,8 @@
 ; Params:
 
 (define (drop_object)
-  (pick_object "")
-  (log-error "The robot is not at the correct drop point."))
+  (cond
+    ((not (can-drop?)) (log-error "The robot is not at the correct drop point."))
+
+    (else
+      (pick_object ""))))
