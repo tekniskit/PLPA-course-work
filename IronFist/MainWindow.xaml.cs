@@ -36,7 +36,6 @@ namespace IronFist
             InitializeComponent();
             "(include \"Scheme/main.scm\")".Eval();
             mapHandler = new MapHandler(MapCanvas);
-            mapHandler.DrawMap();
             Instructions = new ObservableCollection<Instruction>();
 
       
