@@ -46,6 +46,7 @@ namespace IronFist
            
             CreateFileWatcher();
             CreateCounterFileWatcher();
+            CreateErrorFileWatcher();
         }
 
         private void RunButton_Click(object sender, RoutedEventArgs eventArgs)
@@ -61,6 +62,8 @@ namespace IronFist
                         InstructionHandler.Run(ins);
                         Busy = false;
                         Instructions.Last().BackgroundColor = Brushes.Green;
+                        System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/work-complete.wav");
+                        player.Play();
                         MessageBox.Show("Okey dokey", "Job's done!", MessageBoxButton.OK, MessageBoxImage.Information);
                     });
 
@@ -72,6 +75,8 @@ namespace IronFist
             }
             else
             {
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/annoyed5.wav");
+                player.Play();
                 MessageBox.Show("You can only run one command at a time", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
@@ -146,10 +151,46 @@ namespace IronFist
                 {
                     Instructions[number - 1].BackgroundColor = Brushes.Green;
                 }
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/basic-spell-sound.wav");
+                player.Play();
             }
             catch (Exception)
             {   
             }
+        }
+
+        public void CreateErrorFileWatcher()
+        {
+            // Create a new FileSystemWatcher and set its properties.
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.Path = System.AppDomain.CurrentDomain.BaseDirectory;
+            watcher.NotifyFilter = NotifyFilters.LastWrite;
+            watcher.Filter = "error.txt";
+
+            // Add event handlers.
+            watcher.Changed += new FileSystemEventHandler(OnErrorChanged);
+            watcher.Created += new FileSystemEventHandler(OnErrorChanged);
+
+            // Begin watching.
+            watcher.EnableRaisingEvents = true;
+        }
+
+        private void OnErrorChanged(object sender, FileSystemEventArgs e)
+        {
+            var file = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            string text = "";
+
+            using (var sr = new StreamReader(file, Encoding.Default))
+            {
+                while (!sr.EndOfStream)
+                {
+                    text += sr.ReadLine();
+                }
+            }
+
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/annoyed2.wav");
+            player.Play();
+            Application.Current.Dispatcher.Invoke(() => { ErrorConsole.Text = text; });
         }
 
         private void AddInstruction(object sender, RoutedEventArgs e)
