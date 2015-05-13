@@ -14,10 +14,10 @@
 ;   turns = number of 90deg left turns
 
 (define (turn_left turns)
-  (set! direction (modulo (+ direction turns) 4))
+  (inc-program-counter!)
   (thread-sleep 250)
-  (log x y direction cargo)
-  (inc-program-counter!))
+  (set! direction (modulo (+ direction turns) 4))
+  (log x y direction cargo))
 
 
 ; Function: turn_right
@@ -58,8 +58,8 @@
 (define (step-loop distance step do-step!)
   (cond ((> distance 0)
     (cond ((can-step? step)
-      (do-step!)
       (thread-sleep 500)
+      (do-step!)
       (log x y direction cargo)
       (step-loop (- distance (abs step)) step do-step!))
       (else (log-error "Illegal move. Robot stopped."))))))
@@ -84,8 +84,8 @@
 ;   distance = Total distance the robot should move.
 
 (define (move_forward distance)
-  (move distance 1)
-  (inc-program-counter!))
+  (inc-program-counter!)
+  (move distance 1))
 
 
 ; Function: move
@@ -137,10 +137,10 @@
     ((not (can-pick? name)) (log-error "The robot is not at the correct pick up point."))
 
     (else
-      (set! cargo name)
-      (thread-sleep 1000)
-      (log x y direction cargo)
-      (inc-program-counter!))))
+     (inc-program-counter!)
+     (thread-sleep 1000)
+     (set! cargo name)
+     (log x y direction cargo))))
 
 
 ; Function: drop_object
