@@ -8,7 +8,7 @@
 (define cargo "") ; Name of an object as a string
 
 
-; Function: reset_robot
+; Function: reset_robot!
 ; Description: Resets robot state.
 
 (define (reset-robot!)
