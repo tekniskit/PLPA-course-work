@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace IronFist.Model
 {
-    public class Instruction
+    public class Instruction : INotifyPropertyChanged
     {
         private string _command;
         public string Command
@@ -15,17 +17,20 @@ namespace IronFist.Model
             set
             {
                 _command = value;
+                Enabled = true;
                 if (_command == "PICK OBJECT")
                 {
                     Values.Clear();
                     Values.Add("Hammer");
                     Values.Add("Wrench");
                     Values.Add("Drill");
-      
+                    Value = Values[0];
                 }
                 else if (_command == "DROP OBJECT")
                 {
                     Values.Clear();
+                    Value = "";
+                    Enabled = false;
                 }
                 else
                 {
@@ -40,8 +45,10 @@ namespace IronFist.Model
                     Values.Add("8");
                     Values.Add("9");
                     Values.Add("10");
+                    Value = Values[0];
                 }
-                
+                OnPropertyChanged("Value");
+                OnPropertyChanged("Enabled");
             }
             get { return _command; }
         }
@@ -82,17 +89,46 @@ namespace IronFist.Model
             return ToScheme();
         }
 
+        private Brush _backgroundColor;
+
+        public Brush BackgroundColor
+        {
+            get
+            {
+                return _backgroundColor;
+            }
+            set
+            {
+                _backgroundColor = value;
+                OnPropertyChanged("BackgroundColor");
+            }
+        }
+
+        public bool Enabled { get; set; }
         public List<string> Commands { get; set; }
 
         public ObservableCollection<string> Values { get; set; }
 
         public Instruction()
         {
+            BackgroundColor = Brushes.Black;
             Commands = new List<string>() { "MOVE FORWARD", "MOVE BACKWARD", "TURN LEFT", "TURN RIGHT", "DROP OBJECT", "PICK OBJECT" };
             Values = new ObservableCollection<string>();
             Command = Commands[0];
+            Enabled = true;
         }
-        
 
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
 }
