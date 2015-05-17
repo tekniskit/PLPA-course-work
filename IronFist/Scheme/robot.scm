@@ -134,6 +134,14 @@
   (nabour-check -1 -1))
 
 
+
+(define (set-cargo name)
+  (inc-program-counter!)
+  (thread-sleep 1000)
+  (set! cargo name)
+  (log x y direction cargo))
+
+
 ; Function: pick_object
 ; Description: Tries to pick up an object.
 ; Params:
@@ -142,10 +150,7 @@
 (define (pick_object name)
   (cond
     ((and (= cargo 0) (can-pick? name))
-      (inc-program-counter!)
-      (thread-sleep 1000)
-      (set! cargo name)
-      (log x y direction cargo))
+      (set-cargo name))
 
     (else (log-error "The robot is not at the correct pick up point."))))
 
@@ -157,9 +162,6 @@
 (define (drop_object)
   (cond
     ((and (> cargo 0) (can-drop?))
-      (inc-program-counter!)
-      (thread-sleep 1000)
-      (set! cargo 0)
-      (log x y direction cargo))
+      (set-cargo 0))
 
     (else (log-error "The robot is not at the correct drop point."))))
