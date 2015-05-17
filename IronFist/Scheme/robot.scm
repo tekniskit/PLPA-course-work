@@ -5,7 +5,7 @@
 (define x 0)
 (define y 8)
 (define direction 0) ; 0 = east, 1 = north, 2 = west, 3 = south
-(define cargo "") ; Name of an object as a string
+(define cargo 0) ; Id of an object as a number. 0 = empty.
 
 
 ; Function: reset_robot!
@@ -15,7 +15,7 @@
   (set! x 0)
   (set! y 8)
   (set! direction 0)
-  (set! cargo ""))
+  (set! cargo 0))
 
 
 ; Function: turn_left
@@ -112,10 +112,10 @@
   (let
     ((tile (vector-ref (vector-ref factory y) x)))
       (cond 
-        ((equal? tile 'v) (equal? name (vector-ref (vector-ref factory (- y 1)) x)))
-        ((equal? tile '^) (equal? name (vector-ref (vector-ref factory (+ y 1)) x)))
-        ((equal? tile '<) (equal? name (vector-ref (vector-ref factory (+ x 1)) x)))
-        ((equal? tile '>) (equal? name (vector-ref (vector-ref factory (- x 1)) x)))
+        ((eqv? tile 'v) (eqv? name (vector-ref (vector-ref factory (- y 1)) x)))
+        ((eqv? tile '^) (eqv? name (vector-ref (vector-ref factory (+ y 1)) x)))
+        ((eqv? tile '<) (eqv? name (vector-ref (vector-ref factory y) (+ x 1))))
+        ((eqv? tile '>) (eqv? name (vector-ref (vector-ref factory y) (- x 1))))
         (else #f))))
 
 
@@ -127,10 +127,10 @@
   (let
     ((tile (vector-ref (vector-ref factory y) x)))
       (cond
-        ((equal? tile 'v) (equal? (- cargo 1) (vector-ref (vector-ref factory (+ y 1)) x)))
-        ((equal? tile '^) (equal? (- cargo 1) (vector-ref (vector-ref factory (- y 1)) x)))
-        ((equal? tile '<) (equal? (- cargo 1) (vector-ref (vector-ref factory (- x 1)) x)))
-        ((equal? tile '>) (equal? (- cargo 1) (vector-ref (vector-ref factory (+ x 1)) x)))
+        ((eqv? tile 'v) (eqv? (+ cargo 1) (vector-ref (vector-ref factory (+ y 1)) x)))
+        ((eqv? tile '^) (eqv? (+ cargo 1) (vector-ref (vector-ref factory (- y 1)) x)))
+        ((eqv? tile '<) (eqv? (+ cargo 1) (vector-ref (vector-ref factory y) (- x 1))))
+        ((eqv? tile '>) (eqv? (+ cargo 1) (vector-ref (vector-ref factory y) (+ x 1))))
         (else #f))))
 
 
@@ -141,13 +141,13 @@
 
 (define (pick_object name)
   (cond
-    ((not (can-pick? name)) (log-error "The robot is not at the correct pick up point."))
+    ((and (= cargo 0) (can-pick? name))
+      (inc-program-counter!)
+      (thread-sleep 1000)
+      (set! cargo name)
+      (log x y direction cargo))
 
-    (else
-     (inc-program-counter!)
-     (thread-sleep 1000)
-     (set! cargo name)
-     (log x y direction cargo))))
+    (else (log-error "The robot is not at the correct pick up point."))))
 
 
 ; Function: drop_object
@@ -156,7 +156,10 @@
 
 (define (drop_object)
   (cond
-    ((not (can-drop?)) (log-error "The robot is not at the correct drop point."))
+    ((and (> cargo 0) (can-drop?))
+      (inc-program-counter!)
+      (thread-sleep 1000)
+      (set! cargo 0)
+      (log x y direction cargo))
 
-    (else
-      (pick_object ""))))
+    (else (log-error "The robot is not at the correct drop point."))))
