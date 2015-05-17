@@ -106,20 +106,24 @@
   (move distance -1))
 
 
+(define (nabour-check xdir ydir)
+  (let
+    ((tile (get-tile x y)))
+      (cond 
+        ((eqv? tile 'v) (eqv? name (get-tile x (+ y (- ydir)))))
+        ((eqv? tile '^) (eqv? name (get-tile x (+ y ydir))))
+        ((eqv? tile '<) (eqv? name (get-tile (+ x xdir) y)))
+        ((eqv? tile '>) (eqv? name (get-tile (+ x (- xdir)) y)))
+        (else #f))))
+
+
 ; Function: can-pick?
 ; Description: Checks if the robot can pick up the given item.
 ; Params:
 ;   name: The item which the robot wants to pick up.
 
 (define (can-pick? name)
-  (let
-    ((tile (get-tile x y)))
-      (cond 
-        ((eqv? tile 'v) (eqv? name (get-tile x (- y 1))))
-        ((eqv? tile '^) (eqv? name (get-tile x (+ y 1))))
-        ((eqv? tile '<) (eqv? name (get-tile (+ x 1) y)))
-        ((eqv? tile '>) (eqv? name (get-tile (- x 1) y)))
-        (else #f))))
+  (nabour-check 1 1))
 
 
 ; Function: can-drop?
@@ -127,14 +131,7 @@
 ; Params:
 
 (define (can-drop?)
-  (let
-    ((tile (get-tile x y)))
-      (cond
-        ((eqv? tile 'v) (eqv? (+ cargo 1) (get-tile x (+ y 1))))
-        ((eqv? tile '^) (eqv? (+ cargo 1) (get-tile x (- y 1))))
-        ((eqv? tile '<) (eqv? (+ cargo 1) (get-tile (- x 1) y)))
-        ((eqv? tile '>) (eqv? (+ cargo 1) (get-tile (+ x 1) y)))
-        (else #f))))
+  (nabour-check -1 -1))
 
 
 ; Function: pick_object
