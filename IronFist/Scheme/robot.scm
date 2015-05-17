@@ -18,6 +18,9 @@
   (set! cargo 0))
 
 
+(define (get-tile x y)
+  (vector-ref (vector-ref factory y) x))
+
 ; Function: turn_left
 ; Description: Turns the robot to the left
 ; Params:
@@ -47,7 +50,7 @@
 (define (allowed-tile? x y)
     (and (>= y 0) (< y (vector-length factory))
          (>= x 0) (< x (vector-length (vector-ref factory y)))
-         (member (vector-ref (vector-ref factory y) x) '(* ! ^ v < >))))
+         (member (get-tile x y) '(* ! ^ v < >))))
 
 (define (can-step? step)
   (if (even? direction)
@@ -110,12 +113,12 @@
 
 (define (can-pick? name)
   (let
-    ((tile (vector-ref (vector-ref factory y) x)))
+    ((tile (get-tile x y)))
       (cond 
-        ((eqv? tile 'v) (eqv? name (vector-ref (vector-ref factory (- y 1)) x)))
-        ((eqv? tile '^) (eqv? name (vector-ref (vector-ref factory (+ y 1)) x)))
-        ((eqv? tile '<) (eqv? name (vector-ref (vector-ref factory y) (+ x 1))))
-        ((eqv? tile '>) (eqv? name (vector-ref (vector-ref factory y) (- x 1))))
+        ((eqv? tile 'v) (eqv? name (get-tile x (- y 1))))
+        ((eqv? tile '^) (eqv? name (get-tile x (+ y 1))))
+        ((eqv? tile '<) (eqv? name (get-tile (+ x 1) y)))
+        ((eqv? tile '>) (eqv? name (get-tile (- x 1) y)))
         (else #f))))
 
 
@@ -125,12 +128,12 @@
 
 (define (can-drop?)
   (let
-    ((tile (vector-ref (vector-ref factory y) x)))
+    ((tile (get-tile x y)))
       (cond
-        ((eqv? tile 'v) (eqv? (+ cargo 1) (vector-ref (vector-ref factory (+ y 1)) x)))
-        ((eqv? tile '^) (eqv? (+ cargo 1) (vector-ref (vector-ref factory (- y 1)) x)))
-        ((eqv? tile '<) (eqv? (+ cargo 1) (vector-ref (vector-ref factory y) (- x 1))))
-        ((eqv? tile '>) (eqv? (+ cargo 1) (vector-ref (vector-ref factory y) (+ x 1))))
+        ((eqv? tile 'v) (eqv? (+ cargo 1) (get-tile x (+ y 1))))
+        ((eqv? tile '^) (eqv? (+ cargo 1) (get-tile x (- y 1))))
+        ((eqv? tile '<) (eqv? (+ cargo 1) (get-tile (- x 1) y)))
+        ((eqv? tile '>) (eqv? (+ cargo 1) (get-tile (+ x 1) y)))
         (else #f))))
 
 
