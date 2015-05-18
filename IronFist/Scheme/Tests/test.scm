@@ -1,4 +1,4 @@
-(define msgs '())
+(define msgs "")
 
 (define (set-up)
 	(reset-robot!))
@@ -10,11 +10,11 @@
 
 (define (log-results msgs)
   (define file-handle (open-output-file "test-results.txt"))
-  (display (string-join msgs "\n") file-handle)
+  (display msgs file-handle)
   (close-output-port file-handle))
 
 (define (log-result msg)
-	(set! msgs (append msgs '(msg))))
+	(set! msgs (string-append msgs msg "\n")))
 
 (define (it-should description test)
 	(set-up)
