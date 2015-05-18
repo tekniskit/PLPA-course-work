@@ -62,15 +62,15 @@ namespace IronFist.Model
             {
                 if (Value == "Hammer")
                 {
-                    value = "'0";
+                    value = "'1";
                 }
                 else if (Value == "Wrench")
                 {
-                    value = "'1";
+                    value = "'2";
                 }
                 else if (Value == "Drill")
                 {
-                    value = "'2";
+                    value = "'3";
                 }
             }
             else if (_command == "DROP OBJECT")

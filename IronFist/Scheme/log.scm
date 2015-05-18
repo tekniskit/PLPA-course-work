@@ -3,7 +3,7 @@
 
 (define (log x y direction cargo) 
   (define file-handle (open-output-file "log.txt"))
-  (display (string-append (number->string x) ";" (number->string y) ";" (number->string direction) ";" cargo "\n\r") file-handle)
+  (display (string-append (number->string x) ";" (number->string y) ";" (number->string direction) ";" (number->string cargo) "\n\r") file-handle)
   (close-output-port file-handle))
 
 

@@ -5,18 +5,21 @@
 (define x 0)
 (define y 8)
 (define direction 0) ; 0 = east, 1 = north, 2 = west, 3 = south
-(define cargo "") ; Name of an object as a string
+(define cargo 0) ; Id of an object as a number. 0 = empty.
 
 
-; Function: reset_robot
+; Function: reset_robot!
 ; Description: Resets robot state.
 
 (define (reset-robot!)
   (set! x 0)
   (set! y 8)
   (set! direction 0)
-  (set! cargo ""))
+  (set! cargo 0))
 
+
+(define (get-tile x y)
+  (vector-ref (vector-ref factory y) x))
 
 ; Function: turn_left
 ; Description: Turns the robot to the left
@@ -44,18 +47,15 @@
 ; Params:
 ;   step: The length of the steps. A negative number means backward movement.
 
-(define (can-step? step)
-  (let ((allowed-tiles '(* ! ^ v < >)))
-  (if (even? direction)
-    (let* (
-      (next-x (+ (if (= 0 direction) step (- step)) x))
-      (tile (vector-ref (vector-ref factory y) next-x)))
-      (member tile allowed-tiles))
+(define (allowed-tile? x y)
+    (and (>= y 0) (< y (vector-length factory))
+         (>= x 0) (< x (vector-length (vector-ref factory y)))
+         (member (get-tile x y) '(* ! ^ v < >))))
 
-    (let* (
-      (next-y (+ (if (= 3 direction) step (- step)) y))
-      (tile (vector-ref (vector-ref factory next-y) x)))
-      (member tile allowed-tiles)))))
+(define (can-step? step)
+  (if (even? direction)
+    (allowed-tile? (+ (if (= 0 direction) step (- step)) x) y)
+    (allowed-tile? x (+ (if (= 3 direction) step (- step)) y))))
 
 
 ; Function: step-loop
@@ -106,20 +106,24 @@
   (move distance -1))
 
 
+(define (nabour-check xdir ydir)
+  (let
+    ((tile (get-tile x y)))
+      (cond 
+        ((eqv? tile 'v) (eqv? name (get-tile x (+ y (- ydir)))))
+        ((eqv? tile '^) (eqv? name (get-tile x (+ y ydir))))
+        ((eqv? tile '<) (eqv? name (get-tile (+ x xdir) y)))
+        ((eqv? tile '>) (eqv? name (get-tile (+ x (- xdir)) y)))
+        (else #f))))
+
+
 ; Function: can-pick?
 ; Description: Checks if the robot can pick up the given item.
 ; Params:
 ;   name: The item which the robot wants to pick up.
 
 (define (can-pick? name)
-  (let
-    ((tile (vector-ref (vector-ref factory y) x)))
-      (cond 
-        ((equal? tile 'v) (equal? name (vector-ref (vector-ref factory (- y 1)) x)))
-        ((equal? tile '^) (equal? name (vector-ref (vector-ref factory (+ y 1)) x)))
-        ((equal? tile '<) (equal? name (vector-ref (vector-ref factory (+ x 1)) x)))
-        ((equal? tile '>) (equal? name (vector-ref (vector-ref factory (- x 1)) x)))
-        (else #f))))
+  (nabour-check 1 1))
 
 
 ; Function: can-drop?
@@ -127,14 +131,15 @@
 ; Params:
 
 (define (can-drop?)
-  (let
-    ((tile (vector-ref (vector-ref factory y) x)))
-      (cond
-        ((equal? tile 'v) (equal? (- cargo 1) (vector-ref (vector-ref factory (+ y 1)) x)))
-        ((equal? tile '^) (equal? (- cargo 1) (vector-ref (vector-ref factory (- y 1)) x)))
-        ((equal? tile '<) (equal? (- cargo 1) (vector-ref (vector-ref factory (- x 1)) x)))
-        ((equal? tile '>) (equal? (- cargo 1) (vector-ref (vector-ref factory (+ x 1)) x)))
-        (else #f))))
+  (nabour-check -1 -1))
+
+
+
+(define (set-cargo name)
+  (inc-program-counter!)
+  (thread-sleep 1000)
+  (set! cargo name)
+  (log x y direction cargo))
 
 
 ; Function: pick_object
@@ -144,13 +149,10 @@
 
 (define (pick_object name)
   (cond
-    ((not (can-pick? name)) (log-error "The robot is not at the correct pick up point."))
+    ((and (= cargo 0) (can-pick? name))
+      (set-cargo name))
 
-    (else
-     (inc-program-counter!)
-     (thread-sleep 1000)
-     (set! cargo name)
-     (log x y direction cargo))))
+    (else (log-error "The robot is not at the correct pick up point."))))
 
 
 ; Function: drop_object
@@ -159,7 +161,7 @@
 
 (define (drop_object)
   (cond
-    ((not (can-drop?)) (log-error "The robot is not at the correct drop point."))
+    ((and (> cargo 0) (can-drop?))
+      (set-cargo 0))
 
-    (else
-      (pick_object ""))))
+    (else (log-error "The robot is not at the correct drop point."))))
