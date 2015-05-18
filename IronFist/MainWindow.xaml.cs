@@ -175,5 +175,13 @@ namespace IronFist
                 "(include \"Scheme/full-test-run.scm\")".Eval();
             });
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() =>
+            {
+                "(include \"Scheme/Tests/test.scm\")".Eval();
+            });
+        }
     }
 }

@@ -38,6 +38,7 @@
         <Button Content="Add" HorizontalAlignment="Left" Margin="520,443,0,0" VerticalAlignment="Top" Width="113" Height="40" Click="AddInstruction"/>
         <Label Content="RoboJay2000" HorizontalAlignment="Left" Margin="19,10,0,0" VerticalAlignment="Top" Height="50" Width="506" FontFamily="LilyUPC" FontSize="48"/>
         <Button Content="Full test run" HorizontalAlignment="Left" Margin="569,509,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="Run unit tests" HorizontalAlignment="Left" Margin="698,527,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
 
 
     </Grid>

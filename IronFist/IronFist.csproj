@@ -370,6 +370,18 @@
     <None Include="Scheme\full-test-run.scm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Scheme\Tests\cargo.scm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Scheme\Tests\move.scm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Scheme\Tests\test.scm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Scheme\Tests\turn.scm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="test.ss" />
   </ItemGroup>
   <ItemGroup>
