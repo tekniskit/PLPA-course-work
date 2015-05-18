@@ -1,4 +1,4 @@
-(import (rnrs) (ironscheme threading) (srfi :13))
+(import (ironscheme threading))
 
 (include "Scheme/Floorplans/factory.scm")
 (include "Scheme/robot.scm")
