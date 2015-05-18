@@ -217,10 +217,57 @@ namespace IronFist
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Task.Run(() =>
-            {
-                "(include \"Scheme/full-test-run.scm\")".Eval();
-            });
+            Instructions.Clear();
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "10" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "10" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "9" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "6" });
+            Instructions.Add(new Instruction { Command = "PICK OBJECT", Value = "Hammer" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "2" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "6" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "10" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "10" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "1" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "7" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "DROP OBJECT", Value = "" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "2" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "3" });
+            Instructions.Add(new Instruction { Command = "PICK OBJECT", Value = "Wrench" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "4" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "10" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "3" });
+            Instructions.Add(new Instruction { Command = "DROP OBJECT", Value = "" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "6" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "PICK OBJECT", Value = "Drill" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "2" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "5" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "DROP OBJECT", Value = "" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "4" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "2" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "6" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "8" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "8" });
+            Instructions.Add(new Instruction { Command = "DROP OBJECT", Value = "" });
         }
     }
 }
