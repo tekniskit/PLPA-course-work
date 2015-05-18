@@ -22,7 +22,7 @@
                     <GridViewColumn Header="Value" Width="87">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox ItemsSource="{Binding Values}" Foreground="{Binding Path=BackgroundColor}" SelectedValue="{Binding Path=Value}" Width="60" IsEnabled="{Binding Path=Enabled}" />
+                                <ComboBox ItemsSource="{Binding Values}" Foreground="{Binding Path=BackgroundColor}" SelectedValue="{Binding Path=Value}" Width="75" IsEnabled="{Binding Path=Enabled}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
