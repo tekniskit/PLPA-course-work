@@ -110,10 +110,37 @@ namespace IronFist
                     text += sr.ReadLine();
                 }
             }
-
-            TouchRobot(text);
-
-            Application.Current.Dispatcher.Invoke(new Action(() => { TextBlockConsoleOutput.Text = text; }));
+            if (text != null || text != "")
+            {
+                TouchRobot(text);
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    var item = text.Split(';').Last();
+                    var value = "";
+                    Console.WriteLine(text);
+                    if (item == "1")
+                    {
+                        value = "Hammer";
+                    }
+                    else if (item == "2")
+                    {
+                        value = "Wrench";
+                    }
+                    else if (item == "3")
+                    {
+                        value = "Drill";
+                    }
+                    else if (item == "4")
+                    {
+                        value = "Saw";
+                    }
+                    else
+                    {
+                        value = "No objects";
+                    }
+                    TextBlockConsoleOutput.Text = value;
+                }));
+            }
         }
         public void CreateCounterFileWatcher()
         {
