@@ -1,8 +1,5 @@
 (define msgs "")
 
-(define (set-up)
-	(reset-robot!))
-
 (define (clear-test-log)
   (define file-handle (open-output-file "test-results.txt"))
   (display "")
@@ -17,10 +14,10 @@
 	(set! msgs (string-append msgs msg "\n")))
 
 (define (it-should description test)
-	(set-up)
+	(reset-robot!)
 	(if (test)
-		(log-result (string-append "Passed - " description))
-		(log-result (string-append "Failed - " description))))
+		(log-result (string-append "Passed - It should " description))
+		(log-result (string-append "Failed - It should " description))))
 
 
 (clear-test-log)
@@ -29,4 +26,5 @@
 (include "Scheme/Tests/move.scm")
 (include "Scheme/Tests/cargo.scm")
 
+(reset-robot!)
 (log-results msgs)
