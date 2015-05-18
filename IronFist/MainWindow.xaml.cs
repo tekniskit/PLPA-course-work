@@ -167,5 +167,13 @@ namespace IronFist
             int.TryParse(values[2], out direc);
             Application.Current.Dispatcher.Invoke(() => { mapHandler.SetRobot(xVal, yVal, direc); });
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() =>
+            {
+                "(include \"Scheme/full-test-run.scm\")".Eval();
+            });
+        }
     }
 }
