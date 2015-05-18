@@ -308,5 +308,11 @@ namespace IronFist
             "(reset-robot!)".Eval();
             Instructions.Clear();
         }
+
+        private void RemoveInstructionButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedInstruction = InstructionListView.SelectedValue as Instruction;
+            Instructions.Remove(selectedInstruction);
+        }
     }
 }
