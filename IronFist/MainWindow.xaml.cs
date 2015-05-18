@@ -51,8 +51,13 @@ namespace IronFist
 
         private void RunButton_Click(object sender, RoutedEventArgs eventArgs)
         {
-            if (!Busy)
+            if (!Busy && Instructions.Count > 0)
             {
+                foreach (var instruction in Instructions)
+                {
+                    instruction.BackgroundColor = Brushes.Black;
+                }
+                "(reset-program-counter!)".Eval();
                 Busy = true;
                 try
                 {
@@ -110,7 +115,7 @@ namespace IronFist
                     text += sr.ReadLine();
                 }
             }
-            if (text != null || text != "")
+            if (!string.IsNullOrEmpty(text))
             {
                 TouchRobot(text);
                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -288,6 +293,7 @@ namespace IronFist
             Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
             Instructions.Add(new Instruction { Command = "DROP OBJECT", Value = "" });
             Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "4" });
+            Instructions.Add(new Instruction { Command = "PICK OBJECT", Value = "Saw" });
             Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "2" });
             Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "6" });
             Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
@@ -295,6 +301,12 @@ namespace IronFist
             Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
             Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "8" });
             Instructions.Add(new Instruction { Command = "DROP OBJECT", Value = "" });
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            "(reset-robot!)".Eval();
+            Instructions.Clear();
         }
     }
 }

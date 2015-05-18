@@ -41,7 +41,7 @@
         <Button Content="+" HorizontalAlignment="Left" Margin="363,443,0,0" VerticalAlignment="Top" Width="45" Height="40" Click="AddInstruction" Grid.Column="1"/>
         <Label Content="RoboJay2000" HorizontalAlignment="Left" Margin="19,10,0,0" VerticalAlignment="Top" Height="50" Width="506" FontFamily="LilyUPC" FontSize="48" Grid.ColumnSpan="2"/>
         <Button Content="Full test run" HorizontalAlignment="Left" Margin="485,15,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" Height="40" Grid.Column="1" Background="#FF069DD6"/>
-        <Button Content="Reset" HorizontalAlignment="Left" Margin="565,15,0,0" VerticalAlignment="Top" Width="65" Height="40" Background="#FFEE6532" Grid.Column="1" RenderTransformOrigin="0.477,0.525"/>
+        <Button Content="Reset" Name="ResetButton" HorizontalAlignment="Left" Margin="565,15,0,0" VerticalAlignment="Top" Width="65" Height="40" Background="#FFEE6532" Grid.Column="1" RenderTransformOrigin="0.477,0.525" Click="ResetButton_Click"/>
         <Button Content="-" HorizontalAlignment="Left" Margin="413,443,0,0" VerticalAlignment="Top" Width="45" Height="40" Grid.Column="1"/>
 
 
