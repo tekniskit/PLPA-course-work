@@ -106,7 +106,7 @@
   (move distance -1))
 
 
-(define (nabour-check name xdir ydir)
+(define (neighbor-check name xdir ydir)
   (let
     ((tile (get-tile x y)))
       (cond 
@@ -123,7 +123,7 @@
 ;   name: The item which the robot wants to pick up.
 
 (define (can-pick? name)
-  (nabour-check name 1 1))
+  (neighbor-check name 1 1))
 
 
 ; Function: can-drop?
@@ -131,7 +131,7 @@
 ; Params:
 
 (define (can-drop?)
-  (nabour-check (+ cargo 1) -1 -1))
+  (neighbor-check (+ cargo 1) -1 -1))
 
 
 
