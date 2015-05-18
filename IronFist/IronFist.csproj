@@ -367,6 +367,9 @@
     <None Include="Scheme\log.scm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Scheme\full-test-run.scm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="test.ss" />
   </ItemGroup>
   <ItemGroup>
