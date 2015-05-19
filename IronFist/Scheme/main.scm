@@ -7,20 +7,18 @@
 (include "Scheme/turn.scm")
 (include "Scheme/cargo.scm")
 
-(define (exec-cmd robot cmd)
-  (let ((fnc (car cmd))
+(define (exec-prg robot cmds prg-cnt)
+  (let ((cmd (car cmds))
+        (fnc (car cmd))
         (params (cdr cmd)))
     
-    (if (empty? params)
-        (fnc robot)
-        (fnc robot (car params)))))
-
-(define (exec-cmds robot cmds prg-cnt)
-  (cond
-    ((empty? cmds) robot)
-    (else
-     (log-prg-cnt (+ 1 prg-cnt))
-     (run (exec-cmd robot (car cmds)) (cdr cmds)))))
+    (if (empty? cmds)
+        robot
+        (exec-prg (if (empty? params)
+                      (fnc robot)
+                      (fnc robot (car params))) (cdr cmds)))
+    
+    (log-prg-cnt (+ 1 prg-cnt))))
 
 (define (run robot cmds)
-  (exec-cmds robot cmds 0))
+  (exec-prg robot cmds 0))
