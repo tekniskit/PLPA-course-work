@@ -3,6 +3,8 @@
 ;(import (ironscheme threading) (ironscheme linq))
 (include "Floorplans/factory.scm")
 
+(define (log)
+
 (define (get-tile x y)
   (vector-ref (vector-ref factory y) x))
 
@@ -34,14 +36,25 @@
 (define (turn_right x y dir cargo turns)
   (turn_left x y dir cargo (- turns)))
 
+(define (at-workstation? x y id dir)
+  (let
+    ((tile (get-tile x y)))
+      (cond 
+        ((eqv? tile 'v) (eqv? id (get-tile x (- y dir))))
+        ((eqv? tile '^) (eqv? id (get-tile x (+ y dir))))
+        ((eqv? tile '<) (eqv? id (get-tile (+ x dir) y)))
+        ((eqv? tile '>) (eqv? id (get-tile (- x dir) y)))
+        (else #f))))
 
 (define (pick_object x y dir cargo id)
-  (if (and (= cargo 0) (can-pick? id))
+  (if (and (= cargo 0) (at-workstation? x y id 1))
       '(x y dir id)
       (log-error "The robot is not at the correct pick up point.")))
 
-(define (drop_object robot)
-  robot)
+(define (drop_object x y dir cargo)
+  (if (and (> cargo 0) (at-workstation? x y (+ cargo 1) -1))
+      '(x y dir 0)
+      (log-error "The robot is not at the correct drop off point.")))
 
 (define (exec-cmd robot cmd)
   (let (
