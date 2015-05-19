@@ -68,16 +68,7 @@ namespace IronFist.Handlers
 
         private void InitRobotPost()
         {
-            // Set initial robot position and direction
-            int robotPosX;
-            int robotPosY;
-            int robotDirection;
-
-            int.TryParse("x".Eval().ToString(), out robotPosX);
-            int.TryParse("y".Eval().ToString(), out robotPosY);
-            int.TryParse("direction".Eval().ToString(), out robotDirection);
-
-            SetRobot(robotPosX, robotPosY, robotDirection);
+            SetRobot(0, 8, 0);
         }
 
         private void DrawMap()

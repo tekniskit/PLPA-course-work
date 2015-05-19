@@ -47,13 +47,14 @@ namespace IronFist
                 Busy = true;
                 try
                 {
-                    var ins = string.Join(" ", Instructions);
+                    var ins = "(run '(0 8 0 0) (list " + string.Join(" ", Instructions) + "))";
+
                     Task.Run(() =>
                     {
                         InstructionHandler.Run(ins);
                         Busy = false;
                         Instructions.Last().BackgroundColor = Brushes.Green;
-                        SoundPlayer player = new SoundPlayer(@"Sounds/work-complete.wav");
+                        var player = new SoundPlayer(@"Sounds/work-complete.wav");
                         player.Play();
                         MessageBox.Show("Okey dokey", "Job's done!", MessageBoxButton.OK, MessageBoxImage.Information);
                     });
@@ -108,8 +109,9 @@ namespace IronFist
             TouchRobot(text);
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var item = text.Split(';').Last();
-                var value = "";
+                var item = text.TrimStart('(').TrimEnd(')').Split(' ').Last();
+                string value;
+
                 Console.WriteLine(text);
                 switch (item)
                 {
@@ -226,7 +228,7 @@ namespace IronFist
             if (text.Length == 0)
                 return;
 
-            var values = Regex.Split(text, ";");
+            var values = text.TrimStart('(').TrimEnd(')').Split(' ');
             int xVal;
             int yVal;
             int direc;
@@ -295,6 +297,7 @@ namespace IronFist
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
+            "(run '(0 8 0 0) '())".Eval();
             Instructions.Clear();
         }
 

@@ -5,7 +5,7 @@
   (car (cdr robot)))
 
 (define (set-robot robot)
-  (displayln robot)
+  (log robot)
   robot)
 
 (define (set-pos robot x y)  
