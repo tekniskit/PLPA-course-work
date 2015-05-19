@@ -43,11 +43,6 @@
 (define (thread-sleep ms)
   (write "sleep"))
 
-(define (allowed-move? x y)
-    (and (>= y 0) (< y (vector-length factory))
-         (>= x 0) (< x (vector-length (vector-ref factory y)))
-         (member (get-tile x y) '(* ! ^ v < >))))
-
 (define (move robot distance forward?)
   (let* ((x (get-x robot))
          (y (get-y robot))
@@ -56,7 +51,10 @@
          (next-y (if (odd? dir) (+ y (* forward? (if (= 3 dir) 1 -1))) y)))
     
     (cond ((> distance 0)  
-           (if (allowed-move? next-x next-y)
+           (if (and (>= next-y 0) (< next-y (vector-length factory))
+                    (>= next-x 0) (< next-x (vector-length (vector-ref factory next-y)))
+                    (member (get-tile next-x next-y) '(* ! ^ v < >)))
+               
                (move (set-pos robot next-x next-y) (- distance 1) forward?)
                (log-error "Illegal move. Robot stopped."))))))
 
