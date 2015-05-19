@@ -314,13 +314,5 @@ namespace IronFist
             var selectedInstruction = InstructionListView.SelectedValue as Instruction;
             Instructions.Remove(selectedInstruction);
         }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            Task.Run(() =>
-            {
-                "(include \"Scheme/Tests/test.scm\")".Eval();
-            });
-        }
     }
 }
