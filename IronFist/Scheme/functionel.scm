@@ -9,35 +9,33 @@
 (define (get-y robot)
   (car (cdr robot)))
 
-(define (set-pos robot x y)
-  (let (
-        (new (list x y (get-dir robot) (get-cargo robot))))
-    (log new)
-    new))
+(define (set-robot robot)
+  (displayln robot)
+  robot)
+
+(define (set-pos robot x y)  
+    (thread-sleep 500)
+    (set-robot (list x y (get-dir robot) (get-cargo robot))))
 
 (define (get-dir robot)
   (car (cdr (cdr robot))))
 
 (define (set-dir robot dir)
-  (let (
-        (new-robot (list (get-x robot) (get-y robot) dir (get-cargo robot))))
-    (log new-robot)
-    new-robot))
+    (thread-sleep 250)
+    (set-robot (list (get-x robot) (get-y robot) dir (get-cargo robot))))
 
 (define (get-cargo robot)
   (car (cdr (cdr (cdr robot)))))
 
 (define (set-cargo robot cargo)
-  (let (
-        (new-robot (list (get-x robot) (get-y robot) (get-dir robot) cargo)))
-    (log new-robot)
-    new-robot))
+    (thread-sleep 1000)
+    (set-robot (list (get-x robot) (get-y robot) (get-dir robot) cargo)))
 
 (define (get-tile x y)
   (vector-ref (vector-ref factory y) x))
 
-(define (log robot)
-  (displayln robot))
+(define (log-error msg)
+  (displayln msg))
 
 (define (inc-program-counter!)
   (write "inc"))
@@ -56,13 +54,11 @@
          (dir (get-dir robot))
          (next-x (if (even? dir) (+ x (* forward? (if (= 0 dir) 1 -1))) x))
          (next-y (if (odd? dir) (+ y (* forward? (if (= 3 dir) 1 -1))) y)))
-     
-    (cond ((> distance 0)
-           (thread-sleep 500)
+    
+    (cond ((> distance 0)  
            (if (allowed-move? next-x next-y)
                (move (set-pos robot next-x next-y) (- distance 1) forward?)
-               (log-error "Illegal move. Robot stopped."))))
-    robot))
+               (log-error "Illegal move. Robot stopped."))))))
 
 (define (move_forward robot distance)
   (move robot distance 1))
@@ -79,7 +75,7 @@
 (define (at-workstation? x y id dir)
   (let
     ((tile (get-tile x y)))
-      (cond 
+      (cond
         ((eqv? tile 'v) (eqv? id (get-tile x (- y dir))))
         ((eqv? tile '^) (eqv? id (get-tile x (+ y dir))))
         ((eqv? tile '<) (eqv? id (get-tile (+ x dir) y)))
