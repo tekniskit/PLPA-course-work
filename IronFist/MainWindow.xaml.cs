@@ -46,12 +46,18 @@ namespace IronFist
            
             CreateFileWatcher();
             CreateCounterFileWatcher();
+            CreateErrorFileWatcher();
         }
 
         private void RunButton_Click(object sender, RoutedEventArgs eventArgs)
         {
-            if (!Busy)
+            if (!Busy && Instructions.Count > 0)
             {
+                foreach (var instruction in Instructions)
+                {
+                    instruction.BackgroundColor = Brushes.Black;
+                }
+                "(reset-program-counter!)".Eval();
                 Busy = true;
                 try
                 {
@@ -60,6 +66,10 @@ namespace IronFist
                     {
                         InstructionHandler.Run(ins);
                         Busy = false;
+                        Instructions.Last().BackgroundColor = Brushes.Green;
+                        System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/work-complete.wav");
+                        player.Play();
+                        MessageBox.Show("Okey dokey", "Job's done!", MessageBoxButton.OK, MessageBoxImage.Information);
                     });
 
                 }
@@ -70,6 +80,8 @@ namespace IronFist
             }
             else
             {
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/annoyed5.wav");
+                player.Play();
                 MessageBox.Show("You can only run one command at a time", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
@@ -103,10 +115,37 @@ namespace IronFist
                     text += sr.ReadLine();
                 }
             }
-
-            TouchRobot(text);
-
-            Application.Current.Dispatcher.Invoke(new Action(() => { TextBlockConsoleOutput.Text = text; }));
+            if (!string.IsNullOrEmpty(text))
+            {
+                TouchRobot(text);
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    var item = text.Split(';').Last();
+                    var value = "";
+                    Console.WriteLine(text);
+                    if (item == "1")
+                    {
+                        value = "Hammer";
+                    }
+                    else if (item == "2")
+                    {
+                        value = "Wrench";
+                    }
+                    else if (item == "3")
+                    {
+                        value = "Drill";
+                    }
+                    else if (item == "4")
+                    {
+                        value = "Saw";
+                    }
+                    else
+                    {
+                        value = "No objects";
+                    }
+                    TextBlockConsoleOutput.Text = value;
+                }));
+            }
         }
         public void CreateCounterFileWatcher()
         {
@@ -139,11 +178,51 @@ namespace IronFist
             try
             {
                 int number = int.Parse(text);
-                Instructions[number - 1].BackgroundColor = Brushes.Red;
+                Instructions[number].BackgroundColor = Brushes.Red;
+                if (number != 0)
+                {
+                    Instructions[number - 1].BackgroundColor = Brushes.Green;
+                }
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/basic-spell-sound.wav");
+                player.Play();
             }
             catch (Exception)
             {   
             }
+        }
+
+        public void CreateErrorFileWatcher()
+        {
+            // Create a new FileSystemWatcher and set its properties.
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.Path = System.AppDomain.CurrentDomain.BaseDirectory;
+            watcher.NotifyFilter = NotifyFilters.LastWrite;
+            watcher.Filter = "error.txt";
+
+            // Add event handlers.
+            watcher.Changed += new FileSystemEventHandler(OnErrorChanged);
+            watcher.Created += new FileSystemEventHandler(OnErrorChanged);
+
+            // Begin watching.
+            watcher.EnableRaisingEvents = true;
+        }
+
+        private void OnErrorChanged(object sender, FileSystemEventArgs e)
+        {
+            var file = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            string text = "";
+
+            using (var sr = new StreamReader(file, Encoding.Default))
+            {
+                while (!sr.EndOfStream)
+                {
+                    text += sr.ReadLine();
+                }
+            }
+
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/annoyed2.wav");
+            player.Play();
+            Application.Current.Dispatcher.Invoke(() => { ErrorConsole.Text = text; });
         }
 
         private void AddInstruction(object sender, RoutedEventArgs e)
@@ -170,10 +249,70 @@ namespace IronFist
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Task.Run(() =>
-            {
-                "(include \"Scheme/full-test-run.scm\")".Eval();
-            });
+            Instructions.Clear();
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "10" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "10" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "9" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "6" });
+            Instructions.Add(new Instruction { Command = "PICK OBJECT", Value = "Hammer" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "2" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "6" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "10" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "10" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "1" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "7" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "DROP OBJECT", Value = "" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "2" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "3" });
+            Instructions.Add(new Instruction { Command = "PICK OBJECT", Value = "Wrench" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "4" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "10" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "3" });
+            Instructions.Add(new Instruction { Command = "DROP OBJECT", Value = "" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "6" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "PICK OBJECT", Value = "Drill" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "2" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "5" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "2" });
+            Instructions.Add(new Instruction { Command = "DROP OBJECT", Value = "" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "4" });
+            Instructions.Add(new Instruction { Command = "PICK OBJECT", Value = "Saw" });
+            Instructions.Add(new Instruction { Command = "TURN LEFT", Value = "2" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "6" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "8" });
+            Instructions.Add(new Instruction { Command = "TURN RIGHT", Value = "1" });
+            Instructions.Add(new Instruction { Command = "MOVE FORWARD", Value = "8" });
+            Instructions.Add(new Instruction { Command = "DROP OBJECT", Value = "" });
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            "(reset-robot!)".Eval();
+            Instructions.Clear();
+        }
+
+        private void RemoveInstructionButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedInstruction = InstructionListView.SelectedValue as Instruction;
+            Instructions.Remove(selectedInstruction);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)

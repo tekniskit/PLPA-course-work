@@ -15,7 +15,8 @@
   (set! x 0)
   (set! y 8)
   (set! direction 0)
-  (set! cargo 0))
+  (set! cargo 0)
+  (log x y direction cargo))
 
 
 (define (get-tile x y)

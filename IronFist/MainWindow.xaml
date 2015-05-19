@@ -1,10 +1,14 @@
 ﻿<Window x:Class="IronFist.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="648.209" Width="800"
+        Title="RoboJay2000" Height="550" Width="800"
         xmlns:local="clr-namespace:IronFist">
     <Grid>
-        <ListView Name="InstructionListView" Canvas.Left="453" Canvas.Top="229"  IsSynchronizedWithCurrentItem="True" Margin="520,65,21,192">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="47*"/>
+            <ColumnDefinition Width="217*"/>
+        </Grid.ColumnDefinitions>
+        <ListView Name="InstructionListView"  IsSynchronizedWithCurrentItem="True" Margin="363,65,21,81" Grid.Column="1">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Instruction" Width="146">
@@ -18,7 +22,7 @@
                     <GridViewColumn Header="Value" Width="87">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox ItemsSource="{Binding Values}" Foreground="{Binding Path=BackgroundColor}" SelectedValue="{Binding Path=Value}" Width="60" IsEnabled="{Binding Path=Enabled}" />
+                                <ComboBox ItemsSource="{Binding Values}" Foreground="{Binding Path=BackgroundColor}" SelectedValue="{Binding Path=Value}" Width="75" IsEnabled="{Binding Path=Enabled}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -26,19 +30,19 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Canvas x:Name="MapCanvas" Height="360" Width="480" Margin="19,65,293,192">
+        <Canvas x:Name="MapCanvas" Height="360" Width="480" Margin="19,65,293,192" Grid.ColumnSpan="2">
 
 
         </Canvas>
-        <Button Name="RunButton" Content="Run" HorizontalAlignment="Left" Margin="658,443,0,0" VerticalAlignment="Top" Width="113" Click="RunButton_Click" Height="40" Background="#FF68F108"/>
-        <TextBlock Name="TextBlockConsoleOutput" HorizontalAlignment="Left" Margin="131,527,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Width="297"/>
-        <TextBlock Name="ErrorConsole" HorizontalAlignment="Left" Margin="131,558,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Width="297"/>
-        <Label Content="Current state" HorizontalAlignment="Left" Margin="32,521,0,0" VerticalAlignment="Top"/>
-        <Label Content="Error" HorizontalAlignment="Left" Margin="32,552,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.639,0.077"/>
-        <Button Content="Add" HorizontalAlignment="Left" Margin="520,443,0,0" VerticalAlignment="Top" Width="113" Height="40" Click="AddInstruction"/>
-        <Label Content="RoboJay2000" HorizontalAlignment="Left" Margin="19,10,0,0" VerticalAlignment="Top" Height="50" Width="506" FontFamily="LilyUPC" FontSize="48"/>
-        <Button Content="Full test run" HorizontalAlignment="Left" Margin="569,509,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Button Content="Run unit tests" HorizontalAlignment="Left" Margin="698,527,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        <Button Name="RunButton" Content="Run" HorizontalAlignment="Left" Margin="463,443,0,0" VerticalAlignment="Top" Width="167" Click="RunButton_Click" Height="40" Background="#FF68F108" FontWeight="Bold" Grid.Column="1"/>
+        <TextBlock Name="TextBlockConsoleOutput" HorizontalAlignment="Left" Margin="131,463,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Width="297" Grid.ColumnSpan="2"/>
+        <TextBlock Name="ErrorConsole" HorizontalAlignment="Left" Margin="131,488,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Width="297" Grid.ColumnSpan="2"/>
+        <Label Content="Current item:" HorizontalAlignment="Left" Margin="32,457,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Button Content="+" HorizontalAlignment="Left" Margin="363,443,0,0" VerticalAlignment="Top" Width="45" Height="40" Click="AddInstruction" Grid.Column="1"/>
+        <Label Content="RoboJay2000" HorizontalAlignment="Left" Margin="19,10,0,0" VerticalAlignment="Top" Height="50" Width="506" FontFamily="LilyUPC" FontSize="48" Grid.ColumnSpan="2"/>
+        <Button Content="Full test run" HorizontalAlignment="Left" Margin="485,15,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" Height="40" Grid.Column="1" Background="#FF069DD6"/>
+        <Button Content="Reset" Name="ResetButton" HorizontalAlignment="Left" Margin="565,15,0,0" VerticalAlignment="Top" Width="65" Height="40" Background="#FFEE6532" Grid.Column="1" RenderTransformOrigin="0.477,0.525" Click="ResetButton_Click"/>
+        <Button Content="-" Name="RemoveInstructionButton" HorizontalAlignment="Left" Margin="413,443,0,0" VerticalAlignment="Top" Width="45" Height="40" Grid.Column="1" Click="RemoveInstructionButton_Click"/>
 
 
     </Grid>

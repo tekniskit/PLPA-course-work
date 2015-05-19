@@ -24,6 +24,7 @@ namespace IronFist.Model
                     Values.Add("Hammer");
                     Values.Add("Wrench");
                     Values.Add("Drill");
+                    Values.Add("Saw");
                     Value = Values[0];
                 }
                 else if (_command == "DROP OBJECT")
@@ -55,6 +56,8 @@ namespace IronFist.Model
 
         public string Value { get; set; }
 
+       
+
         private string ToScheme()
         {
             var value = "";
@@ -71,6 +74,10 @@ namespace IronFist.Model
                 else if (Value == "Drill")
                 {
                     value = "'3";
+                }
+                else if (Value == "Saw")
+                {
+                    value = "'4";
                 }
             }
             else if (_command == "DROP OBJECT")

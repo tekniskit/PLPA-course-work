@@ -81,7 +81,7 @@
         ((eqv? tile '>) (eqv? id (get-tile (- x dir) y)))
         (else #f))))
 
-(define (pick_object robot id)    
+(define (pick_object robot id)
     (if (and (= (get-cargo robot) 0) (at-workstation? (get-x robot) (get-y robot) id 1))
       (set-cargo robot id)
       (log-error "The robot is not at the correct pick up point.")))
@@ -92,8 +92,7 @@
       (log-error "The robot is not at the correct drop off point.")))
 
 (define (exec-cmd robot cmd)
-  (let (
-        (fnc (car cmd))
+  (let ((fnc (car cmd))
         (params (cdr cmd)))
     
     (if (empty? params)
