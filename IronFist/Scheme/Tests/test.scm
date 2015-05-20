@@ -1,30 +1,26 @@
-(define msgs "")
+(include "Scheme/main.scm")
 
-(define (clear-test-log)
-  (define file-handle (open-output-file "test-results.txt"))
-  (display "")
-  (close-output-port file-handle))
+(define msgs "")
 
 (define (log-results msgs)
   (define file-handle (open-output-file "test-results.txt"))
   (display msgs file-handle)
   (close-output-port file-handle))
 
-(define (log-result msg)
+(define (save-result msg)
+	(displayln msg)
 	(set! msgs (string-append msgs msg "\n")))
 
 (define (it-should description test)
-	(reset-robot!)
 	(if (test)
-		(log-result (string-append "Passed - It should " description))
-		(log-result (string-append "Failed - It should " description))))
+		(save-result (string-append "Passed - It should " description))
+		(save-result (string-append "Failed - It should " description))))
 
 
-(clear-test-log)
+(log-results "")
 
 (include "Scheme/Tests/turn.scm")
 (include "Scheme/Tests/move.scm")
 (include "Scheme/Tests/cargo.scm")
 
-(reset-robot!)
 (log-results msgs)

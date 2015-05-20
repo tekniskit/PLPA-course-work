@@ -9,5 +9,6 @@
 (define (log-prg-cnt prg-cnt)
   (write-file "program-counter.txt" prg-cnt))
 
-(define (log-error msg)
-  (write-file "error.txt" msg))
+(define (error robot msg)
+  (write-file "error.txt" msg)
+  robot)

@@ -11,7 +11,7 @@
                     (member (get-tile next-x next-y) '(* ! ^ v < >)))
                
                (move (set-pos robot next-x next-y) (- distance 1) forward?)
-               (log-error "Illegal move. Robot stopped."))
+               (error robot "Illegal move. Robot stopped."))
            robot)))
 
 (define (move_forward robot distance)

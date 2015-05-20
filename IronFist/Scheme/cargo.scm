@@ -11,9 +11,9 @@
 (define (pick_object robot id)
     (if (and (= (get-cargo robot) 0) (at-workstation? (get-x robot) (get-y robot) id 1))
       (set-cargo robot id)
-      (log-error "The robot is not at the correct pick up point.")))
+      (error robot "The robot is not at the correct pick up point.")))
 
 (define (drop_object robot)
   (if (and (> (get-cargo robot) 0) (at-workstation? (get-x robot) (get-y robot) (+ (get-cargo robot) 1) -1))
       (set-cargo robot 0)
-      (log-error "The robot is not at the correct drop off point.")))
+      (error robot "The robot is not at the correct drop off point.")))
