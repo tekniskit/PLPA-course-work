@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronFist", "IronFist\IronFist.csproj", "{DAE76E50-9E73-4622-AC75-9AAFB9A0CD59}"
 EndProject
@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D94BDC
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronFist.Test", "IronFist.Test\IronFist.Test.csproj", "{0B2294F6-2D23-4AC6-8E4A-E05452AD3CBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +24,10 @@ Global
 		{DAE76E50-9E73-4622-AC75-9AAFB9A0CD59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAE76E50-9E73-4622-AC75-9AAFB9A0CD59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAE76E50-9E73-4622-AC75-9AAFB9A0CD59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B2294F6-2D23-4AC6-8E4A-E05452AD3CBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B2294F6-2D23-4AC6-8E4A-E05452AD3CBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B2294F6-2D23-4AC6-8E4A-E05452AD3CBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B2294F6-2D23-4AC6-8E4A-E05452AD3CBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
