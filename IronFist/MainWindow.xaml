@@ -1,7 +1,7 @@
 ﻿<Window x:Class="IronFist.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="550" Width="800"
+        Title="RoboJay2000" Height="550" Width="800"
         xmlns:local="clr-namespace:IronFist">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -22,7 +22,7 @@
                     <GridViewColumn Header="Value" Width="87">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox ItemsSource="{Binding Values}" Foreground="{Binding Path=BackgroundColor}" SelectedValue="{Binding Path=Value}" Width="60" IsEnabled="{Binding Path=Enabled}" />
+                                <ComboBox ItemsSource="{Binding Values}" Foreground="{Binding Path=BackgroundColor}" SelectedValue="{Binding Path=Value}" Width="75" IsEnabled="{Binding Path=Enabled}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -41,8 +41,8 @@
         <Button Content="+" HorizontalAlignment="Left" Margin="363,443,0,0" VerticalAlignment="Top" Width="45" Height="40" Click="AddInstruction" Grid.Column="1"/>
         <Label Content="RoboJay2000" HorizontalAlignment="Left" Margin="19,10,0,0" VerticalAlignment="Top" Height="50" Width="506" FontFamily="LilyUPC" FontSize="48" Grid.ColumnSpan="2"/>
         <Button Content="Full test run" HorizontalAlignment="Left" Margin="485,15,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" Height="40" Grid.Column="1" Background="#FF069DD6"/>
-        <Button Content="Reset" HorizontalAlignment="Left" Margin="565,15,0,0" VerticalAlignment="Top" Width="65" Height="40" Background="#FFEE6532" Grid.Column="1" RenderTransformOrigin="0.477,0.525"/>
-        <Button Content="-" HorizontalAlignment="Left" Margin="413,443,0,0" VerticalAlignment="Top" Width="45" Height="40" Grid.Column="1"/>
+        <Button Content="Reset" Name="ResetButton" HorizontalAlignment="Left" Margin="565,15,0,0" VerticalAlignment="Top" Width="65" Height="40" Background="#FFEE6532" Grid.Column="1" RenderTransformOrigin="0.477,0.525" Click="ResetButton_Click"/>
+        <Button Content="-" Name="RemoveInstructionButton" HorizontalAlignment="Left" Margin="413,443,0,0" VerticalAlignment="Top" Width="45" Height="40" Grid.Column="1" Click="RemoveInstructionButton_Click"/>
 
 
     </Grid>

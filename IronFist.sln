@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D94BDC
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronTest", "IronTest\IronTest.csproj", "{6A0D097D-C2D9-4EED-9DF7-309CDDD7B0F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{DAE76E50-9E73-4622-AC75-9AAFB9A0CD59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAE76E50-9E73-4622-AC75-9AAFB9A0CD59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAE76E50-9E73-4622-AC75-9AAFB9A0CD59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A0D097D-C2D9-4EED-9DF7-309CDDD7B0F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A0D097D-C2D9-4EED-9DF7-309CDDD7B0F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A0D097D-C2D9-4EED-9DF7-309CDDD7B0F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A0D097D-C2D9-4EED-9DF7-309CDDD7B0F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

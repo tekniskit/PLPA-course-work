@@ -33,3 +33,6 @@
 		((= id 4) '(19 17))
 		((= id 5) '(29 23))
 	))
+
+(define (get-tile x y)
+  (vector-ref (vector-ref factory y) x))
