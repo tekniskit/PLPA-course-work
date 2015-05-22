@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -86,6 +87,18 @@ namespace IronFist.Handlers
             var column = _mapList.First().Count;
             FirstMatrixParse(row, column);
             SecondMatrixParse(row, column);
+            AddWorkStationNumber(1);
+        }
+
+        private void AddWorkStationNumber(int num)
+        {
+            var ws = string.Format("(workstation-num {0})", num).Eval() as IronScheme.Runtime.Cons;
+            if (ws == null) return;
+            var cdr = (ws.cdr as IronScheme.Runtime.Cons);
+            if (cdr == null) return;
+            var x = int.Parse(ws.car.ToString());
+            var y = int.Parse(cdr.car.ToString());
+            AddToCanvas(x, y, Brushes.Yellow, num);
         }
 
         public void SetRobot(int x, int y, int direction)
@@ -123,10 +136,8 @@ namespace IronFist.Handlers
             {
                 for (var j = 0; j < columnCount; j++)
                 {
-                    var posY = i;
-                    var posX = j;
                     var sym = _mapList.ElementAt(i).ElementAt(j);
-                    AddToCanvas(posX, posY, _boxDictionary.ContainsKey(sym) ? _boxDictionary[sym] : Brushes.White);
+                    AddToCanvas(j, i, _boxDictionary.ContainsKey(sym) ? _boxDictionary[sym] : Brushes.White);
                 }
             }
         }
@@ -158,11 +169,16 @@ namespace IronFist.Handlers
                         imageBrush.ImageSource = new BitmapImage(new Uri(@url, UriKind.RelativeOrAbsolute));
                         AddToCanvas(posArrowX, posArrowY, imageBrush);
                     }
+                    else if (Regex.IsMatch(sym, @"\d"))
+                    {
+                        var num = int.Parse(sym);
+                        AddWorkStationNumber(num);
+                    }
                 }
             }
         }
 
-        private Rectangle AddToCanvas(int posX, int posY, Brush figureFill)
+        private Rectangle AddToCanvas(int posX, int posY, Brush figureFill, int num = 0)
         {
             var rect = new Rectangle
             {
@@ -170,12 +186,35 @@ namespace IronFist.Handlers
                 Width = FirgureDim,
                 Height = FirgureDim,
                 Stroke = Brushes.Black,
-                StrokeThickness = 0.5
+                StrokeThickness = 0.5,
+                
             };
 
-            Canvas.SetLeft(rect, posX * FirgureDim);
-            Canvas.SetTop(rect, posY * FirgureDim);
-            _mapCanvas.Children.Add(rect);
+            if (num != 0)
+            {
+                var grid = new Grid
+                {
+                    MaxHeight = FirgureDim,
+                    MaxWidth = FirgureDim
+                };
+
+                grid.Children.Add(rect);
+                grid.Children.Add(new TextBlock
+                {
+                    Text = num.ToString(),
+                    TextAlignment = TextAlignment.Center
+                });
+
+                Canvas.SetLeft(grid, posX * FirgureDim);
+                Canvas.SetTop(grid, posY * FirgureDim);
+                _mapCanvas.Children.Add(grid);
+            }
+            else
+            {
+                Canvas.SetLeft(rect, posX * FirgureDim);
+                Canvas.SetTop(rect, posY * FirgureDim);
+                _mapCanvas.Children.Add(rect);
+            }
 
             return rect;
         }
