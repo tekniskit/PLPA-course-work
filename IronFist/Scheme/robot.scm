@@ -10,6 +10,12 @@
 (define (get-y robot)
   (car (cdr robot)))
 
+(define (get-dir robot)
+  (car (cdr (cdr robot))))
+
+(define (get-cargo robot)
+  (car (cdr (cdr (cdr robot)))))
+
 (define (set-robot robot)
   (log robot)
   robot)
@@ -18,15 +24,9 @@
     (thread-sleep 500)
     (set-robot (list x y (get-dir robot) (get-cargo robot))))
 
-(define (get-dir robot)
-  (car (cdr (cdr robot))))
-
 (define (set-dir robot dir)
     (thread-sleep 250)
     (set-robot (list (get-x robot) (get-y robot) dir (get-cargo robot))))
-
-(define (get-cargo robot)
-  (car (cdr (cdr (cdr robot)))))
 
 (define (set-cargo robot cargo)
     (thread-sleep 1000)
