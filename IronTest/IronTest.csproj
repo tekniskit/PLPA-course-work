@@ -61,6 +61,7 @@
     <Compile Include="CargoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MoveTest.cs" />
+    <Compile Include="TurnTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\as-match.sls" />
