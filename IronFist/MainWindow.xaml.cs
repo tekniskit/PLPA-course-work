@@ -39,6 +39,8 @@ namespace IronFist
 
         private void RunButton_Click(object sender, RoutedEventArgs eventArgs)
         {
+            var result = "(pick_object '(29 2 0 0) 1)".Eval();
+
             if (!Busy && Instructions.Count > 0)
             {
                 foreach (var instruction in Instructions)
