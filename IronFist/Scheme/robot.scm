@@ -1,3 +1,9 @@
+(include "Scheme/Floorplans/factory.scm")
+(include "Scheme/log.scm")
+(include "Scheme/move.scm")
+(include "Scheme/turn.scm")
+(include "Scheme/cargo.scm")
+
 (define (get-x robot)
   (car robot))
 

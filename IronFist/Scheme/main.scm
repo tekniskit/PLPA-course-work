@@ -1,11 +1,6 @@
 (import (ironscheme threading) (ironscheme linq))
 
-(include "Scheme/Floorplans/factory.scm")
-(include "Scheme/log.scm")
 (include "Scheme/robot.scm")
-(include "Scheme/move.scm")
-(include "Scheme/turn.scm")
-(include "Scheme/cargo.scm")
 
 (define (exec-prg robot cmds prg-cnt)
   (if (empty? cmds)
