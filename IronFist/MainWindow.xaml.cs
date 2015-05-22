@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
+using System.Media;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using IronFist.Handlers;
 using IronFist.Model;
 using IronScheme;
@@ -25,25 +17,21 @@ namespace IronFist
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        private MapHandler mapHandler;
+        private readonly MapHandler _mapHandler;
         public ObservableCollection<Instruction> Instructions;
-        public bool Busy = false;
+        public bool Busy;
   
         public MainWindow()
         {
             InitializeComponent();
             "(include \"Scheme/main.scm\")".Eval();
-            mapHandler = new MapHandler(MapCanvas);
-            Instructions = new ObservableCollection<Instruction>();
+            _mapHandler = new MapHandler(MapCanvas);
+            Instructions = new ObservableCollection<Instruction> {new Instruction()};
 
-      
-    
-            Instructions.Add(new Instruction());
             InstructionListView.ItemsSource = Instructions;
-            
-           
+                       
             CreateFileWatcher();
             CreateCounterFileWatcher();
             CreateErrorFileWatcher();
@@ -54,20 +42,19 @@ namespace IronFist
             if (!Busy && Instructions.Count > 0)
             {
                 foreach (var instruction in Instructions)
-                {
                     instruction.BackgroundColor = Brushes.Black;
-                }
-                "(reset-program-counter!)".Eval();
+                
                 Busy = true;
                 try
                 {
-                    string ins = string.Join(" ", Instructions);
+                    var ins = "(run '(0 8 0 0) (list " + string.Join(" ", Instructions) + "))";
+
                     Task.Run(() =>
                     {
                         InstructionHandler.Run(ins);
                         Busy = false;
                         Instructions.Last().BackgroundColor = Brushes.Green;
-                        System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/work-complete.wav");
+                        var player = new SoundPlayer(@"Sounds/work-complete.wav");
                         player.Play();
                         MessageBox.Show("Okey dokey", "Job's done!", MessageBoxButton.OK, MessageBoxImage.Information);
                     });
@@ -80,7 +67,7 @@ namespace IronFist
             }
             else
             {
-                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/annoyed5.wav");
+                var player = new SoundPlayer(@"Sounds/annoyed5.wav");
                 player.Play();
                 MessageBox.Show("You can only run one command at a time", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
@@ -89,24 +76,25 @@ namespace IronFist
         public void CreateFileWatcher()
         {
             // Create a new FileSystemWatcher and set its properties.
-            FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.Path = System.AppDomain.CurrentDomain.BaseDirectory;
-            watcher.NotifyFilter = NotifyFilters.LastWrite;
-            watcher.Filter = "log.txt";
+            var watcher = new FileSystemWatcher
+            {
+                Path = AppDomain.CurrentDomain.BaseDirectory,
+                NotifyFilter = NotifyFilters.LastWrite,
+                Filter = "log.txt"
+            };
 
             // Add event handlers.
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
-            watcher.Created += new FileSystemEventHandler(OnChanged);
+            watcher.Changed += OnChanged;
+            watcher.Created += OnChanged;
 
             // Begin watching.
             watcher.EnableRaisingEvents = true;
         }
 
-        // Define the event handlers.
         private void OnChanged(object source, FileSystemEventArgs e)
         {
             var file = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            string text = "";
+            var text = "";
             
             using (var sr = new StreamReader(file, Encoding.Default))
             {
@@ -115,49 +103,51 @@ namespace IronFist
                     text += sr.ReadLine();
                 }
             }
-            if (!string.IsNullOrEmpty(text))
+
+            if (string.IsNullOrEmpty(text)) return;
+
+            TouchRobot(text);
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                TouchRobot(text);
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+                var item = text.TrimStart('(').TrimEnd(')').Split(' ').Last();
+                string value;
+
+                Console.WriteLine(text);
+                switch (item)
                 {
-                    var item = text.Split(';').Last();
-                    var value = "";
-                    Console.WriteLine(text);
-                    if (item == "1")
-                    {
+                    case "1":
                         value = "Hammer";
-                    }
-                    else if (item == "2")
-                    {
+                        break;
+                    case "2":
                         value = "Wrench";
-                    }
-                    else if (item == "3")
-                    {
+                        break;
+                    case "3":
                         value = "Drill";
-                    }
-                    else if (item == "4")
-                    {
+                        break;
+                    case "4":
                         value = "Saw";
-                    }
-                    else
-                    {
+                        break;
+                    default:
                         value = "No objects";
-                    }
-                    TextBlockConsoleOutput.Text = value;
-                }));
-            }
+                        break;
+                }
+                TextBlockConsoleOutput.Text = value;
+            });
         }
+
         public void CreateCounterFileWatcher()
         {
             // Create a new FileSystemWatcher and set its properties.
-            FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.Path = System.AppDomain.CurrentDomain.BaseDirectory;
-            watcher.NotifyFilter = NotifyFilters.LastWrite;
-            watcher.Filter = "program-counter.txt";
+            var watcher = new FileSystemWatcher
+            {
+                Path = AppDomain.CurrentDomain.BaseDirectory,
+                NotifyFilter = NotifyFilters.LastWrite,
+                Filter = "program-counter.txt"
+            };
 
             // Add event handlers.
-            watcher.Changed += new FileSystemEventHandler(OnCounterChanged);
-            watcher.Created += new FileSystemEventHandler(OnCounterChanged);
+            watcher.Changed += OnCounterChanged;
+            watcher.Created += OnCounterChanged;
 
             // Begin watching.
             watcher.EnableRaisingEvents = true;
@@ -166,7 +156,7 @@ namespace IronFist
         private void OnCounterChanged(object sender, FileSystemEventArgs e)
         {
             var file = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            string text = "";
+            var text = "";
             
             using (var sr = new StreamReader(file, Encoding.Default))
             {
@@ -177,31 +167,34 @@ namespace IronFist
             }
             try
             {
-                int number = int.Parse(text);
+                var number = int.Parse(text);
                 Instructions[number].BackgroundColor = Brushes.Red;
                 if (number != 0)
                 {
                     Instructions[number - 1].BackgroundColor = Brushes.Green;
                 }
-                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/basic-spell-sound.wav");
+                var player = new SoundPlayer(@"Sounds/basic-spell-sound.wav");
                 player.Play();
             }
             catch (Exception)
-            {   
+            {
+                // ignored
             }
         }
 
         public void CreateErrorFileWatcher()
         {
             // Create a new FileSystemWatcher and set its properties.
-            FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.Path = System.AppDomain.CurrentDomain.BaseDirectory;
-            watcher.NotifyFilter = NotifyFilters.LastWrite;
-            watcher.Filter = "error.txt";
+            var watcher = new FileSystemWatcher
+            {
+                Path = AppDomain.CurrentDomain.BaseDirectory,
+                NotifyFilter = NotifyFilters.LastWrite,
+                Filter = "error.txt"
+            };
 
             // Add event handlers.
-            watcher.Changed += new FileSystemEventHandler(OnErrorChanged);
-            watcher.Created += new FileSystemEventHandler(OnErrorChanged);
+            watcher.Changed += OnErrorChanged;
+            watcher.Created += OnErrorChanged;
 
             // Begin watching.
             watcher.EnableRaisingEvents = true;
@@ -210,7 +203,7 @@ namespace IronFist
         private void OnErrorChanged(object sender, FileSystemEventArgs e)
         {
             var file = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            string text = "";
+            var text = "";
 
             using (var sr = new StreamReader(file, Encoding.Default))
             {
@@ -220,14 +213,14 @@ namespace IronFist
                 }
             }
 
-            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Sounds/annoyed2.wav");
+            var player = new SoundPlayer(@"Sounds/annoyed2.wav");
             player.Play();
             Application.Current.Dispatcher.Invoke(() => { ErrorConsole.Text = text; });
         }
 
         private void AddInstruction(object sender, RoutedEventArgs e)
         {
-        Instructions.Add(new Instruction());
+            Instructions.Add(new Instruction());
         }
         
         private void TouchRobot(string text)
@@ -235,16 +228,15 @@ namespace IronFist
             if (text.Length == 0)
                 return;
 
-            var values = Regex.Split(text, ";");
+            var values = text.TrimStart('(').TrimEnd(')').Split(' ');
             int xVal;
             int yVal;
             int direc;
-            var cargo = values[3];
 
             int.TryParse(values[0], out xVal);
             int.TryParse(values[1], out yVal);
             int.TryParse(values[2], out direc);
-            Application.Current.Dispatcher.Invoke(() => { mapHandler.SetRobot(xVal, yVal, direc); });
+            Application.Current.Dispatcher.Invoke(() => { _mapHandler.SetRobot(xVal, yVal, direc); });
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -305,7 +297,7 @@ namespace IronFist
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
-            "(reset-robot!)".Eval();
+            "(run '(0 8 0 0) '())".Eval();
             Instructions.Clear();
         }
 

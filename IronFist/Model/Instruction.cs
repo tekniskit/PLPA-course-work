@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace IronFist.Model
@@ -18,35 +14,38 @@ namespace IronFist.Model
             {
                 _command = value;
                 Enabled = true;
-                if (_command == "PICK OBJECT")
+
+                switch (_command)
                 {
-                    Values.Clear();
-                    Values.Add("Hammer");
-                    Values.Add("Wrench");
-                    Values.Add("Drill");
-                    Values.Add("Saw");
-                    Value = Values[0];
-                }
-                else if (_command == "DROP OBJECT")
-                {
-                    Values.Clear();
-                    Value = "";
-                    Enabled = false;
-                }
-                else
-                {
-                    Values.Clear();
-                    Values.Add("1");
-                    Values.Add("2");
-                    Values.Add("3");
-                    Values.Add("4");
-                    Values.Add("5");
-                    Values.Add("6");
-                    Values.Add("7");
-                    Values.Add("8");
-                    Values.Add("9");
-                    Values.Add("10");
-                    Value = Values[0];
+                    case "PICK OBJECT":
+                        Values.Clear();
+                        Values.Add("Hammer");
+                        Values.Add("Wrench");
+                        Values.Add("Drill");
+                        Values.Add("Saw");
+                        Value = Values[0];
+                        break;
+
+                    case "DROP OBJECT":
+                        Values.Clear();
+                        Value = "";
+                        Enabled = false;
+                        break;
+
+                    default:
+                        Values.Clear();
+                        Values.Add("1");
+                        Values.Add("2");
+                        Values.Add("3");
+                        Values.Add("4");
+                        Values.Add("5");
+                        Values.Add("6");
+                        Values.Add("7");
+                        Values.Add("8");
+                        Values.Add("9");
+                        Values.Add("10");
+                        Value = Values[0];
+                        break;
                 }
                 OnPropertyChanged("Value");
                 OnPropertyChanged("Enabled");
@@ -55,8 +54,6 @@ namespace IronFist.Model
         }
 
         public string Value { get; set; }
-
-       
 
         private string ToScheme()
         {
@@ -88,7 +85,7 @@ namespace IronFist.Model
             {
                 value = Value;
             }
-            return (Command == null) ? " " :  '(' + Command.ToLower().Replace(" ", "_") +' '+  value + ')';
+            return (Command == null) ? " " :  "(list " + Command.ToLower().Replace(" ", "_") +' '+  value + ')';
         }
 
         public override string ToString()
