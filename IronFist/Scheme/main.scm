@@ -5,9 +5,8 @@
 (define (exec-prg robot cmds prg-cnt)
   (if (empty? cmds)
       robot
-      (let* ((cmd (car cmds))
-             (fnc (car cmd))
-             (params (cdr cmd)))
+      (let ((fnc (caar cmds))
+             (params (cdar cmds)))
         (log-prg-cnt prg-cnt)
         (exec-prg (if (empty? params)
                       (fnc robot)

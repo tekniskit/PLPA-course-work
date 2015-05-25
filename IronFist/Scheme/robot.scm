@@ -8,13 +8,13 @@
   (car robot))
 
 (define (get-y robot)
-  (car (cdr robot)))
+  (cadr robot))
 
 (define (get-dir robot)
-  (car (cdr (cdr robot))))
+  (caddr robot))
 
 (define (get-cargo robot)
-  (car (cdr (cdr (cdr robot)))))
+  (cadddr robot))
 
 (define (set-robot robot)
   (log robot)
