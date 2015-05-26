@@ -85,7 +85,6 @@ namespace IronFist
 
             // Add event handlers.
             watcher.Changed += OnChanged;
-            watcher.Created += OnChanged;
 
             // Begin watching.
             watcher.EnableRaisingEvents = true;
@@ -147,7 +146,7 @@ namespace IronFist
 
             // Add event handlers.
             watcher.Changed += OnCounterChanged;
-            watcher.Created += OnCounterChanged;
+     
 
             // Begin watching.
             watcher.EnableRaisingEvents = true;
@@ -194,7 +193,6 @@ namespace IronFist
 
             // Add event handlers.
             watcher.Changed += OnErrorChanged;
-            watcher.Created += OnErrorChanged;
 
             // Begin watching.
             watcher.EnableRaisingEvents = true;
