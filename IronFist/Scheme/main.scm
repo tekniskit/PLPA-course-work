@@ -8,9 +8,7 @@
       (let ((fnc (caar cmds))
              (params (cdar cmds)))
         (log-prg-cnt prg-cnt)
-        (exec-prg (if (empty? params)
-                      (fnc robot)
-                      (fnc robot (car params)))
+        (exec-prg (apply fnc (cons robot params))
                   (cdr cmds)
                   (+ 1 prg-cnt)))))
 
